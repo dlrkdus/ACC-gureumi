@@ -21,11 +21,11 @@ public class Follow {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hashtag_id")
-    private HashTag hashTag;
+    private HashTag hashtag;
 
     @Builder
-    public Follow(User user, HashTag hashTag) {
+    public Follow(User user, HashTag hashtag) {
         this.user = user;
-        this.hashTag = hashTag;
+        this.hashtag = hashtag;
     }
 }

@@ -21,11 +21,11 @@ public class PostHashTag {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hashtag_id")
-    private HashTag hashTag;
+    private HashTag hashtag;
 
     @Builder
-    public PostHashTag(Post post, HashTag hashTag) {
+    public PostHashTag(Post post, HashTag hashtag) {
         this.post = post;
-        this.hashTag = hashTag;
+        this.hashtag = hashtag;
     }
 }
