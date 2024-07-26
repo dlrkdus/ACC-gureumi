@@ -30,7 +30,7 @@ public class Post {
     private User user;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<PostHashTag> postHashTags = new ArrayList<>();
+    private List<PostHashtag> postHashtags = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Like> Likes = new ArrayList<>();

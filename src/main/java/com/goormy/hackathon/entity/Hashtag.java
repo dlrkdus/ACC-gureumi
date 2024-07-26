@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @Getter
-public class HashTag {
+public class Hashtag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,7 @@ public class HashTag {
     private List<Follow> follows = new ArrayList<>();
 
     @OneToMany(mappedBy = "hashtag", cascade = CascadeType.ALL)
-    private List<PostHashTag> postHashTags = new ArrayList<>();
+    private List<PostHashtag> postHashtags = new ArrayList<>();
 
     public enum Type {
         LOCATION,
@@ -37,7 +37,7 @@ public class HashTag {
     }
 
     @Builder
-    public HashTag(String name, Type type) {
+    public Hashtag(String name, Type type) {
         this.name = name;
         this.type = type;
     }
