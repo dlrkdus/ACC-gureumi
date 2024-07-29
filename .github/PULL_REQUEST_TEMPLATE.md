@@ -1,7 +1,5 @@
 # Overview
-
-- resolve: #{이슈번호}
-- close: #{이슈번호}
+- Resolve: #{이슈번호}
 
 # 변경 유형
 * [ ] 기능 추가 
