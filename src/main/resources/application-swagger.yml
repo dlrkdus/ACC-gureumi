@@ -1,5 +1,5 @@
 swagger:
-  server-url: ${SWAGG정ER_SERVER_URL:http://localhost:8080}
+  server-url: ${SWAGGER_SERVER_URL:http://localhost:8080}
 springdoc:
   swagger-ui:
     path: /swagger
