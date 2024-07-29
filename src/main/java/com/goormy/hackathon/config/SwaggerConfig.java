@@ -13,24 +13,24 @@ import java.util.List;
 @Configuration
 public class SwaggerConfig {
 
-  @Value(value = "${swagger.server-url}")
-  private String serverUrl;
+    @Value(value = "${swagger.server-url}")
+    private String serverUrl;
 
-  @Bean
-  public GroupedOpenApi publicApi() {
-    return GroupedOpenApi.builder()
-        .group("v1")
-        .pathsToMatch("/**")
-        .build();
-  }
+    @Bean
+    public GroupedOpenApi publicApi() {
+        return GroupedOpenApi.builder()
+                .group("v1")
+                .pathsToMatch("/**")
+                .build();
+    }
 
-  @Bean
-  public OpenAPI springOpenAPI() {
-    return new OpenAPI()
-        .info(new Info().title("Groomy Server API")
-            .description("Groomy Server API 명세서입니다.")
-            .version("v0.0.1"))
-        .servers(List.of(new Server().url(serverUrl)));
-  }
+    @Bean
+    public OpenAPI springOpenAPI() {
+        return new OpenAPI()
+                .info(new Info().title("Groomy Server API")
+                        .description("Groomy Server API 명세서입니다.")
+                        .version("v0.0.1"))
+                .servers(List.of(new Server().url(serverUrl)));
+    }
 
 }
