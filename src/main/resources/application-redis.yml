@@ -1,8 +1,4 @@
 spring:
-  cache:
-    type: redis
-    redis:
-      cache-null-values: true
   data:
     redis:
       host: ${REDIS_HOST:localhost}
