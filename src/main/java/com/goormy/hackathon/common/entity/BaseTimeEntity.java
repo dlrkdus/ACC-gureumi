@@ -1,4 +1,4 @@
-package com.goormy.hackathon.entity;
+package com.goormy.hackathon.common.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

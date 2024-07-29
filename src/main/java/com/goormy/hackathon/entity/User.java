@@ -1,5 +1,6 @@
 package com.goormy.hackathon.entity;
 
+import com.goormy.hackathon.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
