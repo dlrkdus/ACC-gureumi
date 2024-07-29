@@ -1,6 +1,6 @@
 package com.goormy.hackathon.service;
 
-import jakarta.transaction.Transactional;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -9,6 +9,8 @@ import software.amazon.awssdk.services.sqs.model.SendMessageRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import software.amazon.awssdk.services.sqs.model.SendMessageResponse;
+
+import java.util.Map;
 
 @Service
 public class FollowService {
@@ -22,18 +24,22 @@ public class FollowService {
     private String queueUrl;
 
     public void sendFollowRequest(String userId, String hashtagId) {
-        String messageBody = String.format("{\"userId\": \"%s\", \"hashtagId\": \"%s\"}", userId, hashtagId);
+        try{
+        ObjectMapper objectMapper = new ObjectMapper();
+        String messageBody = objectMapper.writeValueAsString(Map.of(
+                "userId", userId,
+                "hashtagId", hashtagId
+        ));
         SendMessageRequest sendMsgRequest = SendMessageRequest.builder()
                 .queueUrl(queueUrl)
                 .messageBody(messageBody)
                 .build();
         logger.info("Received follow request - userId: {}, hashtagId: {}", userId, hashtagId);
-        try {
-            SendMessageResponse sendMsgResponse = sqsClient.sendMessage(sendMsgRequest);
-            logger.info("Message sent to SQS: {}, Message ID: {}, HTTP Status: {}",
-                    messageBody, sendMsgResponse.messageId(), sendMsgResponse.sdkHttpResponse().statusCode());
+        SendMessageResponse sendMsgResponse = sqsClient.sendMessage(sendMsgRequest);
+        logger.info("Message sent to SQS: {}, Message ID: {}, HTTP Status: {}",
+                messageBody, sendMsgResponse.messageId(), sendMsgResponse.sdkHttpResponse().statusCode());
         } catch (Exception e) {
-            logger.error("Failed to send message to SQS: {}", messageBody, e);
+            logger.error("Failed to send message to SQS", e);
         }
     }
 }
