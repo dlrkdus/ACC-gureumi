@@ -33,7 +33,7 @@ public class Post {
     private List<PostHashtag> postHashtags = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<Like> Likes = new ArrayList<>();
+    private List<Like> likes = new ArrayList<>();
 
     @Builder
     public Post(User user, String content, String imageUrl, Integer star, Integer likeCount) {
