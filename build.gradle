@@ -30,6 +30,11 @@ dependencies {
 
 	implementation platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.0.1")
 	implementation 'io.awspring.cloud:spring-cloud-aws-starter-sqs'
+	implementation 'redis.clients:jedis:4.0.1'
+	implementation 'com.amazonaws:aws-lambda-java-core:1.2.1'
+	implementation 'com.amazonaws:aws-lambda-java-events:3.11.0'
+	implementation 'org.springframework.cloud:spring-cloud-function-adapter-aws:3.2.7'
+
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
@@ -41,3 +46,26 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+jar {
+	manifest {
+		attributes(
+				'Manifest-Version': '1.0',
+				'Main-Class': 'com.goormy.hackathon.HackathonApplication'
+		)
+	}
+}
+
+task buildZip(type: Zip) {
+	from compileJava
+	from processResources
+	into('lib') {
+		from configurations.runtimeClasspath
+	}
+	into('lib') {
+		from jar.archiveFile
+	}
+	archiveFileName = 'lambda-function.zip'
+	destinationDirectory = file("$buildDir/distributions")
+}
+
+build.dependsOn buildZip

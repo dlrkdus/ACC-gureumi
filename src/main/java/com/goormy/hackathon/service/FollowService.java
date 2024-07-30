@@ -23,7 +23,7 @@ public class FollowService {
     @Value("${spring.cloud.aws.sqs.queue-url}")
     private String queueUrl;
 
-    public void sendFollowRequest(String userId, String hashtagId) {
+    public void sendFollowRequest(long userId, long hashtagId) {
         try{
         ObjectMapper objectMapper = new ObjectMapper();
         String messageBody = objectMapper.writeValueAsString(Map.of(
