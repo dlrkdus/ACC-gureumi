@@ -1,5 +1,6 @@
 package com.goormy.hackathon.controller;
 
+import com.goormy.hackathon.common.util.LocalDateTimeConverter;
 import com.goormy.hackathon.dto.request.AddFeedUser;
 import com.goormy.hackathon.dto.response.GetFeedResponseDto;
 import com.goormy.hackathon.redis.entity.PostSimpleInfo;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class GetFeedController {
 
     private final GetFeedService getFeedService;
+    private final LocalDateTimeConverter localDateTimeConverter;
 
     private final FeedUserRedisRepository feedUserRedisRepository;
     private final FeedHashtagRedisRepository feedHashtagRedisRepository;
@@ -51,7 +53,8 @@ public class GetFeedController {
         requestDto.getInfoList().forEach(
             info ->
                 feedHashtagRedisRepository.add(userId,
-                    PostSimpleInfo.toEntity(info.getPostId(), info.getCreatedAt()))
+                    PostSimpleInfo.toEntity(info.getPostId(),
+                        localDateTimeConverter.convertToString(info.getCreatedAt())))
         );
 
         // 피드 리스트 반환
@@ -66,7 +69,8 @@ public class GetFeedController {
         requestDto.getInfoList().forEach(
             info ->
                 feedUserRedisRepository.add(userId,
-                    PostSimpleInfo.toEntity(info.getPostId(), info.getCreatedAt()))
+                    PostSimpleInfo.toEntity(info.getPostId(),
+                        localDateTimeConverter.convertToString(info.getCreatedAt())))
         );
 
         // 피드 리스트 반환

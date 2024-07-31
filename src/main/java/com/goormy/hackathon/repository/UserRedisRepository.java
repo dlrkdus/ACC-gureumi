@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class UserRedisRepository {
 
     private final RedisTemplate<String, UserRedis> redisTemplate;
-    private static final String USER_KEY = "user:";
+    private static final String USER_KEY = "User:";
 
     private ValueOperations<String, UserRedis> valueOperations;
 

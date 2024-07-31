@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class FeedUserRedisRepository {
 
     private final RedisTemplate<String, PostSimpleInfo> redisTemplate;
-    private static final String FEED_USER_KEY = "feed_user:";
+    private static final String FEED_USER_KEY = "FeedUser:";
 
     private ListOperations<String, PostSimpleInfo> listOperations;
 

@@ -17,7 +17,7 @@ public class RecentUpdateRedisRepository {
     private final StringRedisTemplate stringRedisTemplate;
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
-    private static final String RECENT_UPDATE_KEY = "recent_update:";
+    private static final String RECENT_UPDATE_KEY = "RecentUpdate:";
     private static final Duration TTL = Duration.ofDays(3);
 
     private ValueOperations<String, String> valueOperations;

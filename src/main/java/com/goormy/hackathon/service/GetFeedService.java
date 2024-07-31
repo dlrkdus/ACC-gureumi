@@ -1,6 +1,6 @@
 package com.goormy.hackathon.service;
 
-import com.goormy.hackathon.converter.LocalDateTimeConverter;
+import com.goormy.hackathon.common.util.LocalDateTimeConverter;
 import com.goormy.hackathon.dto.response.GetFeedResponseDto;
 import com.goormy.hackathon.entity.Follow;
 import com.goormy.hackathon.entity.Post;
@@ -67,8 +67,8 @@ public class GetFeedService {
         // 날짜 세팅
         // recentUpdatedTime - 가장 마지막으로 업데이트한 시간이랑 3일 중 현재와 가장 가까운 시간을 기준으로 잡음
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime recentUpdatedTime = now.minusDays(3);// recentUpdateRedisRepository.get(
-        //userRedis.getId()).orElse(now.minusDays(3));
+        LocalDateTime recentUpdatedTime = recentUpdateRedisRepository.get(userRedis.getId())
+            .orElse(now.minusDays(3));
 
         // *** 2. Push 방식 ***
         // Push 방식으로 저장되어있는 포스트 가져오기 -> Created At 정보도 같이 저장해야함
@@ -84,14 +84,12 @@ public class GetFeedService {
         // *** 3. Pull 방식 ***
         // Pull 방식으로 저장되어있는 인플루언서 포스트 가져오기 -> 사용자가 최근에 업데이트한 시간 이후부터 진행
         // (이유) 한개의 Key에 있는 각 값마다 TTL 설정이 불가능하기 때문
-        // user의 follow 리스트를 순회하면서 가져와야함
-        // 5000명이 넘는지를 판단해야함 -> popular 캐시에 있으면 되는 것
-        // 기본적인 우선순위 정보는 가지고 있어도 좋을듯  -> 꼭 필요한 Post 정보만 가지고올 수 있도록
-        // 3일 전 포스트까지만 가져오기
+        // user의 follow 리스트를 순회하면서 가져와야함 & 3일 전 포스트까지만 가져오기
         userRedis.getFollowerIdList().forEach(
             followId -> {
                 List<PostSimpleInfo> info = feedHashtagRedisRepository.getAll(followId);
                 postSimpleInfoList.addAll(info.stream()
+                    .filter(Objects::nonNull)
                     .filter(simpleInfo -> localDateTimeConverter.convertToLocalDateTime(
                         simpleInfo.getCreatedAt()).isAfter(recentUpdatedTime))
                     .toList()
@@ -102,35 +100,34 @@ public class GetFeedService {
         // 최신 업데이트 시간 반영
         recentUpdateRedisRepository.set(userRedis.getId(), now);
 
-        return postSimpleInfoList;
+        return postSimpleInfoList.stream().filter(Objects::nonNull).toList();
     }
 
     // 5. size개의 post를 구분
-    private List<Long> splitPostSimpleInfoList(List<PostSimpleInfo> postSimpleInfoList,
-        int size) {
+    private List<Long> splitPostSimpleInfoList(UserRedis userRedis,
+        List<Long> postIdList, int size) {
         // 초기 반환을 위한 Id 리스트
-        // TODO: 만약 size가 작으면 인기 게시물에서 가져와야함
 
-        // TODO: 나머지 정렬한 값을 Redis에 저장
-        List<PostSimpleInfo> postSimpleInfoListForRedis = postSimpleInfoList.stream()
+        // 나머지 정렬한 값을 Redis에 저장
+        List<Long> postIdListForRedis = postIdList.stream()
             .skip(size).toList();
-
+        postIdListForRedis.forEach(
+            postId -> feedUserSortRedisRepository.add(userRedis.getId(), postId));
 
         // 사용자에게 반환할 게시글 리스트
-        return postSimpleInfoList.stream()
-            .limit(size)
-            .map(PostSimpleInfo::getPostId)
-            .toList();
+        return postIdList.stream().limit(size).toList();
     }
 
     // 5. PostList를 가져옴
     private List<PostRedis> getPostList(List<Long> postIdList) {
         List<PostRedis> postRedisList = new ArrayList<>(postRedisRepository.getAll(postIdList));
+
         if (postRedisList.isEmpty()) {
             return new ArrayList<>();
         }
+
         List<Long> postCacheIdList = postRedisList.stream()
-            .filter(Objects::nonNull) // Filter out nulls
+            .filter(Objects::nonNull)
             .map(PostRedis::getId)
             .toList();
 
@@ -159,28 +156,33 @@ public class GetFeedService {
     @Transactional
     public List<GetFeedResponseDto> getFeedList(Long userId, int size) {
         // 1. 사용자 정보 가져오기 (Redis -> RDS)
-        // TODO: 사용자 정보에 Follow ID List 가져오는 로직 추가 필요
         UserRedis userRedis = getUser(userId);
 
-        // TODO: 2.0 진행 예정
+        // 2.0 이미 정리해둔 post가 있으면 가져오기
+        List<Long> postIdList = feedUserSortRedisRepository.getSome(userId, size);
+        if (postIdList.size() == size) {
+            return getPostList(postIdList).stream().map(GetFeedResponseDto::toDto)
+                .toList();
+        } else {
+            size -= postIdList.size();
+        }
 
         // 2, 3. Push, Pull로 Feed List 가져오기 & 필터링
         // 나중에 (1)여기 먼저 조회 & 있으면 반환, 없으면 (2)push/pull 확인 후 부족하면 (3)인기 게시글 반환
-        List<PostSimpleInfo> pushPullFeedList = getPushPullFeed(userRedis).stream()
-            .filter(Objects::nonNull).toList(); // 여기서 Null 체크, 이후 리스트에 들어가는 모든 post는 null이 있을 수 없음
+        List<PostSimpleInfo> pushPullFeedList = getPushPullFeed(userRedis);
+        // 여기서 Null 체크, 이후 리스트에 들어가는 모든 post는 null이 있을 수 없음
 
         // 4. 최신순으로 정렬
-        List<PostSimpleInfo> sortedPushPullFeedList = pushPullFeedList.stream()
+        List<Long> sortedPushPullFeedList = pushPullFeedList.stream()
             .sorted(Comparator.comparing(PostSimpleInfo::getCreatedAt))
+            .map(PostSimpleInfo::getId)
             .toList();
 
         // 5. 반환할 데이터와, Redis에 저장할 데이터를 구분하고, Redis에 저장
-        List<Long> postIdListForReturn = splitPostSimpleInfoList(sortedPushPullFeedList, size);
+        List<Long> postIdListForReturn = splitPostSimpleInfoList(userRedis, sortedPushPullFeedList,
+            size);
         // 5. post를 조회해서 반환
-
-        List<PostRedis> data = getPostList(postIdListForReturn);
-        List<GetFeedResponseDto> returnDto = data.stream().map(GetFeedResponseDto::toDto).toList();
-        return returnDto;
+        return getPostList(postIdListForReturn).stream().map(GetFeedResponseDto::toDto).toList();
 
     }
 }

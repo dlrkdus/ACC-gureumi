@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class FeedHashtagRedisRepository {
 
     private final RedisTemplate<String, PostSimpleInfo> redisTemplate;
-    private static final String FEED_HASHTAG_KEY = "feed_hashtag:";
+    private static final String FEED_HASHTAG_KEY = "FeedHashtag:";
 
     private ListOperations<String, PostSimpleInfo> listOperations;
 

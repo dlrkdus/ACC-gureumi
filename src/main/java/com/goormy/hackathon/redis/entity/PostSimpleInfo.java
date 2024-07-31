@@ -6,31 +6,33 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.goormy.hackathon.common.util.LocalDateTimeConverter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Getter
 @Builder
 public class PostSimpleInfo {
 
-    private Long postId;
+    private Long id;
     private String createdAt;
 
     @JsonCreator
     public PostSimpleInfo(
-        @JsonProperty("postId") Long postId,
+        @JsonProperty("id") Long postId,
         @JsonProperty("createdAt") String createdAt) {
-        this.postId = postId;
+        this.id = postId;
         this.createdAt = createdAt;
     }
 
-    public static PostSimpleInfo toEntity(Long postId, LocalDateTime createdAt) {
+    public static PostSimpleInfo toEntity(Long postId, String createdAt) {
         return PostSimpleInfo.builder()
-            .postId(postId)
-            .createdAt(createdAt.toString())
+            .id(postId)
+            .createdAt(createdAt)
             .build();
     }
 
