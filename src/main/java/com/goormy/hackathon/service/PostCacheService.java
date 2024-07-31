@@ -40,7 +40,7 @@ public class PostCacheService {
     private void pushModel(Hashtag hashtag, Post post) {
         var userIdList = followListRedisRepository.findUserIdList(hashtag.getId());
         userIdList.forEach(userId -> {
-            feedUserRedisRepository.save(Long.valueOf(userId), post);
+            feedUserRedisRepository.save(userId, post);
         });
     }
 

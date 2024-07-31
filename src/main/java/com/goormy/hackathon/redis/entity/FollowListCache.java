@@ -11,6 +11,6 @@ public class FollowListCache implements Serializable {
 
     @Id
     private String hashtagId;
-    private List<Integer> userIdList;
+    private List<Long> userIdList;
 
 }
