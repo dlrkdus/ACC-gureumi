@@ -1,0 +1,16 @@
+package com.goormy.hackathon.redis.entity;
+
+import lombok.Getter;
+import org.springframework.data.annotation.Id;
+
+import java.io.Serializable;
+import java.util.List;
+
+@Getter
+public class FollowListCache implements Serializable {
+
+    @Id
+    private String hashtagId;
+    private List<Integer> userIdList;
+
+}
