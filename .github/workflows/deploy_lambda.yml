@@ -30,7 +30,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle without test
-        run: ./gradlew build -x test
+        run: ./gradlew clean build -x test buildZip
 
       - name: Create deployment package
         run: |

@@ -23,9 +23,9 @@ public class LikeController {
         @RequestHeader(name = "userId") Long userId,
         @RequestParam(name = "postId") Long postId) {
 
-        likeService.addLike(postId, userId);
+        likeService.sendLikeRequest(userId,postId);
 
-        return ResponseEntity.ok("success");
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/likes")
@@ -33,9 +33,9 @@ public class LikeController {
         @RequestHeader(name = "userId") Long userId,
         @RequestParam(name = "postId") Long postId) {
 
-        likeService.cancelLike(postId, userId);
+        likeService.sendCancelLikeRequest(userId,postId);
 
-        return ResponseEntity.ok("success");
+        return ResponseEntity.noContent().build();
     }
 
 }
