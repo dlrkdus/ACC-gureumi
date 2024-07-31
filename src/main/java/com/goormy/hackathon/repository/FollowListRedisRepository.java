@@ -1,4 +1,4 @@
-package com.goormy.hackathon.redis.repository;
+package com.goormy.hackathon.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;

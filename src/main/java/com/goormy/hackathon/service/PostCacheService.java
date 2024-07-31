@@ -3,7 +3,7 @@ package com.goormy.hackathon.service;
 import com.goormy.hackathon.entity.Hashtag;
 import com.goormy.hackathon.entity.Post;
 import com.goormy.hackathon.redis.entity.PostCache;
-import com.goormy.hackathon.redis.repository.*;
+import com.goormy.hackathon.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

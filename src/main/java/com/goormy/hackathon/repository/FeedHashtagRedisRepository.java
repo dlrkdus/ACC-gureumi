@@ -1,4 +1,4 @@
-package com.goormy.hackathon.redis.repository;
+package com.goormy.hackathon.repository;
 
 import com.goormy.hackathon.entity.Post;
 import com.goormy.hackathon.redis.entity.FeedSimpleInfo;

@@ -3,7 +3,7 @@ package com.goormy.hackathon.service;
 import com.goormy.hackathon.dto.hashtag.PostHashtagRequestDto;
 import com.goormy.hackathon.entity.Hashtag;
 import com.goormy.hackathon.redis.entity.FollowCountCache;
-import com.goormy.hackathon.redis.repository.FollowCountRedisRepository;
+import com.goormy.hackathon.repository.FollowCountRedisRepository;
 import com.goormy.hackathon.repository.HashtagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
