@@ -22,21 +22,27 @@ public class FollowFunction{
                 // userId와 hashtagId를 Number로 파싱하고 long으로 변환
                 long userId = ((Number) messageBody.get("userId")).longValue();
                 long hashtagId = ((Number) messageBody.get("hashtagId")).longValue();
+                String action = (String) messageBody.get("action");
 
                 User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("존재하지 않는 사용자입니다. userId: " + userId));
                 Hashtag hashtag = hashtagRepository.findById(hashtagId).orElseThrow(() -> new RuntimeException("존재하지 않는 해시태그입니다. hashtagId: " + hashtagId));
 
-                // Follow 객체 생성 및 설정
-                Follow follow = new Follow();
-                follow.setUser(user);
-                follow.setHashtag(hashtag);
-
-                // MySQL에 데이터 저장
-                followRepository.save(follow);
-
-                System.out.println("Processed message: " + messageBody);
+                if ("follow".equals(action)) {
+                    Follow follow = new Follow();
+                    follow.setUser(user);
+                    follow.setHashtag(hashtag);
+                    followRepository.save(follow);
+                    System.out.println("팔로우 성공: " + messageBody);
+                } else if ("unfollow".equals(action)) {
+                    Follow follow = followRepository.findByUserIdAndHashTagId(userId, hashtagId)
+                            .orElseThrow(() -> new RuntimeException("존재하지 않는 팔로우입니다. userId: " + userId + " hashtagId: " + hashtagId));
+                    followRepository.delete(follow);
+                    System.out.println("팔로우 취소 성공: " + messageBody);
+                } else {
+                    System.out.println("존재하지 않는 action입니다 : " + action);
+                }
             } catch (Exception e) {
-                System.err.println("Failed to process message: " + messageBody);
+                System.err.println("메시지 전송 실패: " + messageBody);
                 e.printStackTrace();
             }
         };

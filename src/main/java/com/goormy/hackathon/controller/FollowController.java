@@ -18,5 +18,11 @@ public class FollowController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/unfollow")
+    public ResponseEntity<String> unfollow(@RequestHeader long userId, @RequestParam long hashtagId) {
+        followService.sendUnfollowRequest(userId,hashtagId);
+        return ResponseEntity.noContent().build();
+    }
+
 
 }
