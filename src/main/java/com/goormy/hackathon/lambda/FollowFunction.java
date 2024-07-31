@@ -28,9 +28,7 @@ public class FollowFunction{
                 Hashtag hashtag = hashtagRepository.findById(hashtagId).orElseThrow(() -> new RuntimeException("존재하지 않는 해시태그입니다. hashtagId: " + hashtagId));
 
                 if ("follow".equals(action)) {
-                    Follow follow = new Follow();
-                    follow.setUser(user);
-                    follow.setHashtag(hashtag);
+                    Follow follow = new Follow(user,hashtag);
                     followRepository.save(follow);
                     System.out.println("팔로우 성공: " + messageBody);
                 } else if ("unfollow".equals(action)) {
