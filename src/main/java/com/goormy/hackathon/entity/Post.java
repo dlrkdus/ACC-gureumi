@@ -44,4 +44,17 @@ public class Post extends BaseTimeEntity {
         this.star = star;
         this.likeCount = likeCount;
     }
+
+    public List<Hashtag> getPostHashtags() {
+        return postHashtags.stream()
+                .map(PostHashtag::getHashtag)
+                .toList();
+    }
+
+    public void setPostHashtags(List<Hashtag> hashtags) {
+        this.postHashtags = hashtags.stream()
+                .map(hashtag -> new PostHashtag(this, hashtag))
+                .toList();
+    }
+
 }
