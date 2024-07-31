@@ -43,6 +43,21 @@ public class GetFeedController {
         return ResponseEntity.ok(getFeedService.getFeedList(userId, size));
     }
 
+    @PostMapping("/hashfeed")
+    public ResponseEntity<String> addFeedHashtagData(
+        @RequestHeader Long userId,
+        @RequestBody AddFeedUser requestDto
+    ) {
+        requestDto.getInfoList().forEach(
+            info ->
+                feedHashtagRedisRepository.add(userId,
+                    PostSimpleInfo.toEntity(info.getPostId(), info.getCreatedAt()))
+        );
+
+        // 피드 리스트 반환
+        return ResponseEntity.ok("ok");
+    }
+
     @PostMapping("/userfeed")
     public ResponseEntity<String> addFeedUserData(
         @RequestHeader Long userId,
@@ -50,7 +65,7 @@ public class GetFeedController {
     ) {
         requestDto.getInfoList().forEach(
             info ->
-                feedHashtagRedisRepository.add(userId,
+                feedUserRedisRepository.add(userId,
                     PostSimpleInfo.toEntity(info.getPostId(), info.getCreatedAt()))
         );
 

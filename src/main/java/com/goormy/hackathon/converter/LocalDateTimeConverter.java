@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class LocalDateTimeConverter {
 
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 
     public LocalDateTime convertToLocalDateTime(String source) {
         try {
