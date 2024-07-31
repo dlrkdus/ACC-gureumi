@@ -15,7 +15,7 @@ public record PostResponseDto(
         List<PostHashtagResponseDto> postHashtags,
         LocalDateTime createdAt
 
-) implements Serializable {
+) {
 
     public PostResponseDto(Post post) {
         this(
