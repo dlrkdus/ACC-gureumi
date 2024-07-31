@@ -10,6 +10,7 @@ import com.goormy.hackathon.redis.entity.PostSimpleInfo;
 import com.goormy.hackathon.redis.entity.UserRedis;
 import com.goormy.hackathon.repository.FeedHashtagRedisRepository;
 import com.goormy.hackathon.repository.FeedUserRedisRepository;
+import com.goormy.hackathon.repository.FeedUserSortRedisRepository;
 import com.goormy.hackathon.repository.PostRedisRepository;
 import com.goormy.hackathon.repository.PostRepository;
 import com.goormy.hackathon.repository.RecentUpdateRedisRepository;
@@ -34,11 +35,12 @@ public class GetFeedService {
 
     private final LocalDateTimeConverter localDateTimeConverter;
 
-    private final UserRedisRepository userRedisRepository;
+    private final FeedHashtagRedisRepository feedHashtagRedisRepository;
+    private final FeedUserRedisRepository feedUserRedisRepository;
+    private final FeedUserSortRedisRepository feedUserSortRedisRepository;
     private final PostRedisRepository postRedisRepository;
     private final RecentUpdateRedisRepository recentUpdateRedisRepository;
-    private final FeedUserRedisRepository feedUserRedisRepository;
-    private final FeedHashtagRedisRepository feedHashtagRedisRepository;
+    private final UserRedisRepository userRedisRepository;
 
     // 1. 사용자 정보를 가져옴
     private UserRedis getUser(Long userId) {
@@ -65,7 +67,6 @@ public class GetFeedService {
         // 날짜 세팅
         // recentUpdatedTime - 가장 마지막으로 업데이트한 시간이랑 3일 중 현재와 가장 가까운 시간을 기준으로 잡음
         LocalDateTime now = LocalDateTime.now();
-
         LocalDateTime recentUpdatedTime = now.minusDays(3);// recentUpdateRedisRepository.get(
         //userRedis.getId()).orElse(now.minusDays(3));
 
@@ -112,8 +113,8 @@ public class GetFeedService {
 
         // TODO: 나머지 정렬한 값을 Redis에 저장
         List<PostSimpleInfo> postSimpleInfoListForRedis = postSimpleInfoList.stream()
-            .skip(size)
-            .toList();
+            .skip(size).toList();
+
 
         // 사용자에게 반환할 게시글 리스트
         return postSimpleInfoList.stream()
@@ -154,19 +155,19 @@ public class GetFeedService {
         return postRedisList.stream().filter(Objects::nonNull).toList();
     }
 
-    // TODO: 각 포스트의 가중치를 생각해서 정렬하기 -> 일단은 날짜 기준으로 정렬되어있어서 패스
+    // 날짜 기준으로 정렬하는 것으로 우선순위 선정
     @Transactional
     public List<GetFeedResponseDto> getFeedList(Long userId, int size) {
-        // 1. 사용자 정보 가져오기 (Redis -> RDS)  - 완료
+        // 1. 사용자 정보 가져오기 (Redis -> RDS)
+        // TODO: 사용자 정보에 Follow ID List 가져오는 로직 추가 필요
         UserRedis userRedis = getUser(userId);
 
         // TODO: 2.0 진행 예정
 
         // 2, 3. Push, Pull로 Feed List 가져오기 & 필터링
-        // id, createdAt을 함께 가진 PostSimpleInfo 데이터 리스트
         // 나중에 (1)여기 먼저 조회 & 있으면 반환, 없으면 (2)push/pull 확인 후 부족하면 (3)인기 게시글 반환
         List<PostSimpleInfo> pushPullFeedList = getPushPullFeed(userRedis).stream()
-            .filter(Objects::nonNull).toList();
+            .filter(Objects::nonNull).toList(); // 여기서 Null 체크, 이후 리스트에 들어가는 모든 post는 null이 있을 수 없음
 
         // 4. 최신순으로 정렬
         List<PostSimpleInfo> sortedPushPullFeedList = pushPullFeedList.stream()
