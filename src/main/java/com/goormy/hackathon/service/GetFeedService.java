@@ -3,6 +3,7 @@ package com.goormy.hackathon.service;
 import com.goormy.hackathon.common.util.LocalDateTimeConverter_DS;
 import com.goormy.hackathon.dto.response.GetFeedResponseDto;
 import com.goormy.hackathon.entity.Follow;
+import com.goormy.hackathon.entity.Hashtag;
 import com.goormy.hackathon.entity.Post;
 import com.goormy.hackathon.entity.User;
 import com.goormy.hackathon.redis.entity.PostRedis_DS;
@@ -13,7 +14,6 @@ import com.goormy.hackathon.repository.FeedUserRedisRepository_DS;
 import com.goormy.hackathon.repository.FeedUserSortRedisRepository_DS;
 import com.goormy.hackathon.repository.PostRedisRepository_DS;
 import com.goormy.hackathon.repository.PostRepository;
-import com.goormy.hackathon.repository.RecentUpdateRedisRepository_DS;
 import com.goormy.hackathon.repository.RecentUpdateRedisRepository_DS;
 import com.goormy.hackathon.repository.UserRedisRepository_DS;
 import com.goormy.hackathon.repository.UserRespository;
@@ -141,7 +141,7 @@ public class GetFeedService {
             PostRedis_DS postRedisDS = PostRedis_DS.toEntity(
                 post.getId(), post.getContent(), post.getImageUrl(), post.getStar(),
                 post.getLikeCount(), post.getUser().getId(),
-                post.getPostHashtags().stream().map(hashtag -> hashtag.getHashtag().getName())
+                post.getPostHashtags().stream().map(Hashtag::getName)
                     .toList(), post.getCreatedAt()
             );
             postRedisRepository.set(postRedisDS.getId(), postRedisDS);
