@@ -1,23 +1,22 @@
 package com.goormy.hackathon.dto.post;
 
-import com.goormy.hackathon.dto.hashtag.PostHashtagResponseDto;
+import com.goormy.hackathon.dto.hashtag.PostHashtagResponseDto_SY;
 import com.goormy.hackathon.entity.Post;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record PostResponseDto(
+public record PostResponseDto_SY(
         Long id,
         String content,
         String imageUrl,
         Integer star,
-        List<PostHashtagResponseDto> postHashtags,
+        List<PostHashtagResponseDto_SY> postHashtags,
         LocalDateTime createdAt
 
 ) {
 
-    public PostResponseDto(Post post) {
+    public PostResponseDto_SY(Post post) {
         this(
                 post.getId(),
                 post.getContent(),
@@ -28,9 +27,9 @@ public record PostResponseDto(
         );
     }
 
-    private static List<PostHashtagResponseDto> mapHashtagsToDto(Post post) {
+    private static List<PostHashtagResponseDto_SY> mapHashtagsToDto(Post post) {
         return post.getPostHashtags().stream()
-                .map(hashtag -> new PostHashtagResponseDto(hashtag.getName(), hashtag.getType()))
+                .map(hashtag -> new PostHashtagResponseDto_SY(hashtag.getName(), hashtag.getType()))
                 .toList();
     }
 }

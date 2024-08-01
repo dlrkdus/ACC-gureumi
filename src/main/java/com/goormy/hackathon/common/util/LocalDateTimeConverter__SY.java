@@ -3,9 +3,9 @@ package com.goormy.hackathon.common.util;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public final class LocalDateTimeConverter {
+public final class LocalDateTimeConverter__SY {
 
-    private LocalDateTimeConverter() {
+    private LocalDateTimeConverter__SY() {
     }
 
     public static String convert(LocalDateTime value) {

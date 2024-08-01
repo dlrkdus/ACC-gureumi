@@ -1,18 +1,18 @@
 package com.goormy.hackathon.repository;
 
-import com.goormy.hackathon.redis.entity.FollowCountCache;
+import com.goormy.hackathon.redis.entity.FollowCountCache_SY;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class FollowCountRedisRepository {
+public class FollowCountRedisRepository_SY {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public void set(FollowCountCache followCountCache) {
-        redisTemplate.opsForHash().put(followCountCache.getKey(), followCountCache.getField(), followCountCache.getFollowCount());
+    public void set(FollowCountCache_SY followCountCacheSY) {
+        redisTemplate.opsForHash().put(followCountCacheSY.getKey(), followCountCacheSY.getField(), followCountCacheSY.getFollowCount());
     }
 
     public Integer findFollowCountByHashtagId(Long hashtagId) {

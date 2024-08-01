@@ -8,13 +8,13 @@ import java.io.Serializable;
 import java.util.List;
 
 @Getter
-public class FeedUserCache implements Serializable {
+public class FeedUserCache_SY implements Serializable {
 
     @Id
     Long userId;
-    private List<FeedSimpleInfo> postList;
+    private List<FeedSimpleInfo_SY> postList;
 
-    public FeedUserCache(Post post) {
+    public FeedUserCache_SY(Post post) {
         this.userId = post.getUser().getId();
     }
 

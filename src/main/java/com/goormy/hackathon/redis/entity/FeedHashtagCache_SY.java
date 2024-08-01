@@ -7,10 +7,10 @@ import java.io.Serializable;
 import java.util.List;
 
 @Getter
-public class FeedHashtagCache implements Serializable {
+public class FeedHashtagCache_SY implements Serializable {
 
     @Id
     Long hashtagId;
-    private List<FeedSimpleInfo> postList;
+    private List<FeedSimpleInfo_SY> postList;
 
 }

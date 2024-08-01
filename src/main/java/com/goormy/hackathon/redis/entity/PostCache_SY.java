@@ -1,7 +1,7 @@
 package com.goormy.hackathon.redis.entity;
 
 
-import com.goormy.hackathon.common.util.LocalDateTimeConverter;
+import com.goormy.hackathon.common.util.LocalDateTimeConverter__SY;
 import com.goormy.hackathon.entity.Hashtag;
 import com.goormy.hackathon.entity.Post;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Getter
-public class PostCache implements Serializable {
+public class PostCache_SY implements Serializable {
 
     @Id
     private Long postId;
@@ -23,7 +23,7 @@ public class PostCache implements Serializable {
     private List<String> postHashtags;
     private String createdAt;
 
-    public PostCache(Post post) {
+    public PostCache_SY(Post post) {
         this.postId = post.getId();
         this.content = post.getContent();
         this.imageUrl = post.getImageUrl();
@@ -33,7 +33,7 @@ public class PostCache implements Serializable {
         this.postHashtags = post.getPostHashtags().stream()
                 .map(Hashtag::getName)
                 .toList();
-        this.createdAt = LocalDateTimeConverter.convert(post.getCreatedAt());
+        this.createdAt = LocalDateTimeConverter__SY.convert(post.getCreatedAt());
     }
 
     public String getKey() {
