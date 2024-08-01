@@ -42,7 +42,7 @@ dependencies {
 	implementation 'redis.clients:jedis:4.0.1'
 	implementation 'com.amazonaws:aws-lambda-java-core:1.2.1'
 	implementation 'com.amazonaws:aws-lambda-java-events:3.11.0'
-	implementation 'org.springframework.cloud:spring-cloud-function-adapter-aws:3.2.7'
+	implementation 'org.springframework.cloud:spring-cloud-function-adapter-aws:4.0.0'
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
@@ -68,3 +68,5 @@ task buildZip(type: Zip) {
 	archiveFileName = 'lambda-function.zip'
 	destinationDirectory = file("$buildDir/distributions")
 }
+
+build.dependsOn buildZip

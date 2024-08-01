@@ -3,11 +3,11 @@ package com.goormy.hackathon.service;
 import com.goormy.hackathon.entity.Like;
 import com.goormy.hackathon.entity.Post;
 import com.goormy.hackathon.entity.User;
+import com.goormy.hackathon.lambda.LikeFunction;
 import com.goormy.hackathon.repository.LikeRedisRepository;
 import com.goormy.hackathon.repository.LikeRepository;
 import com.goormy.hackathon.repository.PostRepository;
 import com.goormy.hackathon.repository.UserRepository;
-import jakarta.persistence.PrePersist;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class LikeServiceTest {
@@ -28,7 +26,7 @@ class LikeServiceTest {
     PostRepository postRepository;
 
     @Autowired
-    LikeService likeService;
+    LikeFunction likeFunction;
 
     @Autowired
     LikeRepository likeRepository;
@@ -101,7 +99,7 @@ class LikeServiceTest {
         // given
 
         // when
-        likeService.addLike(2L,1L);
+        likeFunction.addLike(2L,1L);
 
     }
 
@@ -110,7 +108,7 @@ class LikeServiceTest {
         // given
 
         // when
-        likeService.cancelLike(2L,1L);
+        likeFunction.cancelLike(2L,1L);
 
     }
 
@@ -120,8 +118,8 @@ class LikeServiceTest {
         // given
 
         // when
-        boolean exist = likeService.findLike(4L, 3L);
-        boolean noExist = likeService.findLike(2L, 3L);
+        boolean exist = likeFunction.findLike(4L, 3L);
+        boolean noExist = likeFunction.findLike(2L, 3L);
 
         // then
         Assertions.assertEquals(exist, true);
@@ -138,7 +136,7 @@ class LikeServiceTest {
         likeRedisRepository.update(4L, 3L, -1);
 
         // when
-        likeService.dumpToDB();
+        likeFunction.dumpToDB();
 
         // then
     }

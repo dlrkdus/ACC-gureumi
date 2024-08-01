@@ -1,5 +1,6 @@
 package com.goormy.hackathon.lambda;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goormy.hackathon.entity.Follow;
 import com.goormy.hackathon.entity.Hashtag;
 import com.goormy.hackathon.entity.Like;
@@ -9,6 +10,7 @@ import com.goormy.hackathon.repository.LikeRedisRepository;
 import com.goormy.hackathon.repository.LikeRepository;
 import com.goormy.hackathon.repository.PostRepository;
 import com.goormy.hackathon.repository.UserRepository;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -26,23 +28,27 @@ public class LikeFunction {
     private final LikeRepository likeRepository;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
+    private final ObjectMapper objectMapper;
 
     @Bean
     public Consumer<Map<String, Object>> processLike() {
         return messageBody -> {
             try {
-                // userId와 postId를 Long으로 변환
-                Long userId = ((Long) messageBody.get("userId"));
-                Long postId = ((Long) messageBody.get("postId"));
-                String action = (String) messageBody.get("action");
+                List<Map<String, Object>> records = (List<Map<String, Object>>) messageBody.get("Records");
+                String bodyString = (String) records.get(0).get("body");
+                Map<String, Object> body = objectMapper.readValue(bodyString, Map.class);
+
+                long userId = ((Number) body.get("userId")).longValue();
+                long postId = ((Number) body.get("postId")).longValue();
+                String action = (String) body.get("action");
 
                 User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("존재하지 않는 사용자입니다. userId: " + userId));
                 Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("존재하지 않는 포스트 입니다. postId: " + postId));
 
-                if ("follow".equals(action)) {
+                if ("like".equals(action)) {
                     addLike(postId,userId);
                     System.out.println("좋아요 성공: " + messageBody);
-                } else if ("unfollow".equals(action)) {
+                } else if ("unlike".equals(action)) {
                     cancelLike(postId,userId);
                     System.out.println("좋아요 취소 성공: " + messageBody);
                 } else {
