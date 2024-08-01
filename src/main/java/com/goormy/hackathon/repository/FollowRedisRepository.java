@@ -18,12 +18,12 @@ public class FollowRedisRepository {
     @Autowired
     FollowRepository followRepository;
 
-    public void insertFollow(Long hashtagId, Long userId) {
+    public void set(Long hashtagId, Long userId) {
         String key = "hashtagId: " + hashtagId.toString();
         redisTemplate.opsForList().rightPush(key, userId);
     }
 
-    public void removeFollow(Long hashtagId, Long userId) {
+    public void delete(Long hashtagId, Long userId) {
         String key = "hashtagId:" + hashtagId.toString();
         redisTemplate.opsForList().remove(key, 0, userId);
     }
