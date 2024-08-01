@@ -37,6 +37,13 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 
+
+	implementation platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.0.1")
+	implementation 'io.awspring.cloud:spring-cloud-aws-starter-sqs'
+	implementation 'com.amazonaws:aws-lambda-java-core:1.2.1'
+	implementation 'com.amazonaws:aws-lambda-java-events:3.11.0'
+	implementation 'org.springframework.cloud:spring-cloud-function-adapter-aws:4.0.0'
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
 	implementation platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.0.1")
 	implementation 'io.awspring.cloud:spring-cloud-aws-starter-sqs'
 	implementation 'redis.clients:jedis:4.0.1'
@@ -55,6 +62,15 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+jar {
+	manifest {
+		attributes(
+				'Manifest-Version': '1.0',
+				'Main-Class': 'com.goormy.hackathon.HackathonApplication'
+		)
+	}
+}
+
 
 task buildZip(type: Zip) {
 	from compileJava
@@ -70,3 +86,4 @@ task buildZip(type: Zip) {
 }
 
 build.dependsOn buildZip
+
