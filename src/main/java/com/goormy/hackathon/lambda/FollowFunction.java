@@ -44,13 +44,11 @@ public class FollowFunction{
 
                 if ("follow".equals(action)) {
                     Follow follow = new Follow(user,hashtag);
-                    followRepository.save(follow);
                     followRedisRepository.insertFollow(hashtagId, userId);
                     System.out.println("팔로우 성공: " + messageBody);
                 } else if ("unfollow".equals(action)) {
                     Follow follow = followRepository.findByUserIdAndHashTagId(userId, hashtagId)
                             .orElseThrow(() -> new RuntimeException("존재하지 않는 팔로우입니다. userId: " + userId + " hashtagId: " + hashtagId));
-                    followRepository.delete(follow);
                     followRedisRepository.removeFollow(hashtagId, userId);
                     System.out.println("팔로우 취소 성공: " + messageBody);
                 } else {
