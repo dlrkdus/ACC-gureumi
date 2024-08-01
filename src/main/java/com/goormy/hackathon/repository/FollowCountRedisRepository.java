@@ -11,11 +11,11 @@ public class FollowCountRedisRepository {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public void save(FollowCountCache followCountCache) {
+    public void set(FollowCountCache followCountCache) {
         redisTemplate.opsForHash().put(followCountCache.getKey(), followCountCache.getField(), followCountCache.getFollowCount());
     }
 
-    public Integer findFollowCount(Long hashtagId) {
+    public Integer findFollowCountByHashtagId(Long hashtagId) {
         String key = "FollowCount:" + hashtagId;
         String field = String.valueOf(hashtagId);
         return (Integer) redisTemplate.opsForHash().get(key, field);

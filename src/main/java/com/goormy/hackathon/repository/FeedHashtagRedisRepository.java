@@ -12,7 +12,7 @@ public class FeedHashtagRedisRepository {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public void save(Long hashtagId, Post post) {
+    public void set(Long hashtagId, Post post) {
         String key = "FeedHashtag:" + hashtagId;
         Object value = new FeedSimpleInfo(post);
         redisTemplate.opsForList().leftPush(key, value);

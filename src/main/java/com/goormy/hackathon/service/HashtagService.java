@@ -31,7 +31,7 @@ public class HashtagService {
                         hashtagRepository.save(newHashtag);
 
                         var followCountCache = new FollowCountCache(newHashtag);
-                        followCountRedisRepository.save(followCountCache);
+                        followCountRedisRepository.set(followCountCache);
 
                         return newHashtag;
                     });

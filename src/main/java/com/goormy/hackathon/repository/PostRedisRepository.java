@@ -11,7 +11,7 @@ public class PostRedisRepository {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public void save(PostCache postCache) {
+    public void set(PostCache postCache) {
         redisTemplate.opsForList().leftPush(postCache.getKey(), postCache);
     }
 

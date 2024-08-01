@@ -19,7 +19,7 @@ public class PostCacheService {
 
     // TODO: 이벤트로 발행한 후 이벤트를 받아 Redis에 비동기로 저장
     public void cache(Post post) {
-        postRedisRepository.save(new PostCache(post));
+        postRedisRepository.set(new PostCache(post));
         for (var hashtag : post.getPostHashtags()) {
             if (isPopular(hashtag)) {
                 pullModel(hashtag, post);
@@ -30,7 +30,7 @@ public class PostCacheService {
     }
 
     private boolean isPopular(Hashtag hashtag) {
-        var followCount = followCountRedisRepository.findFollowCount(hashtag.getId());
+        var followCount = followCountRedisRepository.findFollowCountByHashtagId(hashtag.getId());
         if (followCount != null ) {
             return followCount >= 5000;
         }
@@ -38,13 +38,13 @@ public class PostCacheService {
     }
 
     private void pushModel(Hashtag hashtag, Post post) {
-        var userIdList = followListRedisRepository.findUserIdList(hashtag.getId());
+        var userIdList = followListRedisRepository.findUserIdListByHashtagId(hashtag.getId());
         userIdList.forEach(userId -> {
-            feedUserRedisRepository.save(userId, post);
+            feedUserRedisRepository.set(userId, post);
         });
     }
 
     private void pullModel(Hashtag hashtag, Post post) {
-        feedHashtagRedisRepository.save(hashtag.getId(), post);
+        feedHashtagRedisRepository.set(hashtag.getId(), post);
     }
 }
