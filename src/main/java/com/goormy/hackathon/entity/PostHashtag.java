@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @Getter
-public class PostHashtag extends BaseTimeEntity{
+public class PostHashtag{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

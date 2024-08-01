@@ -2,19 +2,16 @@ package com.goormy.hackathon.redis.entity;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Id;
 import java.io.Serializable;
 import java.util.List;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.redis.core.RedisHash;
 
 @Getter
 @Setter
 @Builder
-public class UserRedis implements Serializable {
+public class UserRedis_DS implements Serializable {
 
     private Long id;
 
@@ -29,7 +26,7 @@ public class UserRedis implements Serializable {
     private List<Long> followerIdList;
 
     @JsonCreator
-    public UserRedis(
+    public UserRedis_DS(
         @JsonProperty("id") Long id,
         @JsonProperty("name") String name,
         @JsonProperty("password") String password,
@@ -45,9 +42,9 @@ public class UserRedis implements Serializable {
     }
 
 
-    public static UserRedis toEntity(Long id, String name, String password, Integer followerCount,
+    public static UserRedis_DS toEntity(Long id, String name, String password, Integer followerCount,
         Integer followingCount, List<Long> followerIdList) {
-        return UserRedis.builder()
+        return UserRedis_DS.builder()
             .id(id)
             .name(name)
             .password(password)

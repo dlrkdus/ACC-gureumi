@@ -1,11 +1,12 @@
 package com.goormy.hackathon.controller;
 
-import com.goormy.hackathon.common.util.LocalDateTimeConverter;
+import com.goormy.hackathon.common.util.LocalDateTimeConverter_DS;
+import com.goormy.hackathon.common.util.LocalDateTimeConverter_DS;
 import com.goormy.hackathon.dto.request.AddFeedUser;
 import com.goormy.hackathon.dto.response.GetFeedResponseDto;
-import com.goormy.hackathon.redis.entity.PostSimpleInfo;
-import com.goormy.hackathon.repository.FeedHashtagRedisRepository;
-import com.goormy.hackathon.repository.FeedUserRedisRepository;
+import com.goormy.hackathon.redis.entity.PostSimpleInfo_DS;
+import com.goormy.hackathon.repository.FeedHashtagRedisRepository_DS;
+import com.goormy.hackathon.repository.FeedUserRedisRepository_DS;
 import com.goormy.hackathon.service.GetFeedService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -24,10 +25,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class GetFeedController {
 
     private final GetFeedService getFeedService;
-    private final LocalDateTimeConverter localDateTimeConverter;
+    private final LocalDateTimeConverter_DS localDateTimeConverter;
 
-    private final FeedUserRedisRepository feedUserRedisRepository;
-    private final FeedHashtagRedisRepository feedHashtagRedisRepository;
+    private final FeedUserRedisRepository_DS feedUserRedisRepository;
+    private final FeedHashtagRedisRepository_DS feedHashtagRedisRepository;
 
     /**
      * [GET] 사용자 맞춤형 피드 조회 기능
@@ -53,7 +54,7 @@ public class GetFeedController {
         requestDto.getInfoList().forEach(
             info ->
                 feedHashtagRedisRepository.add(userId,
-                    PostSimpleInfo.toEntity(info.getPostId(),
+                    PostSimpleInfo_DS.toEntity(info.getPostId(),
                         localDateTimeConverter.convertToString(info.getCreatedAt())))
         );
 
@@ -69,7 +70,7 @@ public class GetFeedController {
         requestDto.getInfoList().forEach(
             info ->
                 feedUserRedisRepository.add(userId,
-                    PostSimpleInfo.toEntity(info.getPostId(),
+                    PostSimpleInfo_DS.toEntity(info.getPostId(),
                         localDateTimeConverter.convertToString(info.getCreatedAt())))
         );
 

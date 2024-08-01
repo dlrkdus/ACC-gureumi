@@ -9,10 +9,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class FeedUserSortRedisRepository {
+public class FeedUserSortRedisRepository_DS {
 
     private final RedisTemplate<String, Long> redisTemplate;
-    private static final String FEED_USER_SORTED_KEY = "FeedUserSort:";
+    private static final String FEED_USER_SORTED_KEY = "feedusersort:";
 
     private ListOperations<String, Long> listOperations;
 

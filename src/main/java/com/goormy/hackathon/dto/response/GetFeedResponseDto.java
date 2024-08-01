@@ -1,6 +1,6 @@
 package com.goormy.hackathon.dto.response;
 
-import com.goormy.hackathon.redis.entity.PostRedis;
+import com.goormy.hackathon.redis.entity.PostRedis_DS;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,15 +21,15 @@ public class GetFeedResponseDto {
     private Long userId;
     private List<String> postHashtags;
 
-    public static GetFeedResponseDto toDto(PostRedis postRedis) {
+    public static GetFeedResponseDto toDto(PostRedis_DS postRedisDS) {
         return GetFeedResponseDto.builder()
-            .id(postRedis.getId())
-            .content(postRedis.getContent())
-            .imgUrl(postRedis.getImgUrl())
-            .star(postRedis.getStar())
-            .likeCount(postRedis.getLikeCount())
-            .userId(postRedis.getUserId())
-            .postHashtags(postRedis.getPostHashtags())
+            .id(postRedisDS.getId())
+            .content(postRedisDS.getContent())
+            .imgUrl(postRedisDS.getImgUrl())
+            .star(postRedisDS.getStar())
+            .likeCount(postRedisDS.getLikeCount())
+            .userId(postRedisDS.getUserId())
+            .postHashtags(postRedisDS.getPostHashtags())
             .build();
     }
 }

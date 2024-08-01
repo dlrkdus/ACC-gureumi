@@ -1,6 +1,6 @@
 package com.goormy.hackathon.repository;
 
-import com.goormy.hackathon.redis.entity.UserRedis;
+import com.goormy.hackathon.redis.entity.UserRedis_DS;
 import jakarta.annotation.PostConstruct;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -10,24 +10,24 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class UserRedisRepository {
+public class UserRedisRepository_DS {
 
-    private final RedisTemplate<String, UserRedis> redisTemplate;
-    private static final String USER_KEY = "User:";
+    private final RedisTemplate<String, UserRedis_DS> redisTemplate;
+    private static final String USER_KEY = "user:";
 
-    private ValueOperations<String, UserRedis> valueOperations;
+    private ValueOperations<String, UserRedis_DS> valueOperations;
 
     @PostConstruct
     private void init() {
         valueOperations = redisTemplate.opsForValue();
     }
 
-    public void set(Long userId, UserRedis value) {
+    public void set(Long userId, UserRedis_DS value) {
         valueOperations.set(USER_KEY + userId, value);
     }
 
-    public Optional<UserRedis> get(Long userId) {
-        UserRedis user = valueOperations.get(USER_KEY + userId);
+    public Optional<UserRedis_DS> get(Long userId) {
+        UserRedis_DS user = valueOperations.get(USER_KEY + userId);
         return Optional.ofNullable(user);
     }
 }

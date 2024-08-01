@@ -14,7 +14,7 @@ import org.springframework.data.redis.core.RedisHash;
 @RedisHash("post")
 @AllArgsConstructor
 @Builder
-public class PostRedis {
+public class PostRedis_DS {
 
     @Id
     private Long id;
@@ -29,7 +29,7 @@ public class PostRedis {
 
 
     @JsonCreator
-    public PostRedis(
+    public PostRedis_DS(
         @JsonProperty("id") Long id,
         @JsonProperty("content") String content,
         @JsonProperty("imgUrl") String imgUrl,
@@ -48,9 +48,9 @@ public class PostRedis {
         this.createdAt = createdAt;
     }
 
-    public static PostRedis toEntity(Long id, String content, String imgUrl, Integer star,
+    public static PostRedis_DS toEntity(Long id, String content, String imgUrl, Integer star,
         Integer likeCount, Long userId, List<String> postHashtags, LocalDateTime createdAt) {
-        return PostRedis.builder()
+        return PostRedis_DS.builder()
             .id(id)
             .content(content)
             .imgUrl(imgUrl)
