@@ -1,8 +1,6 @@
 package com.goormy.hackathon.lambda;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.goormy.hackathon.entity.Follow;
-import com.goormy.hackathon.entity.Hashtag;
 import com.goormy.hackathon.entity.Like;
 import com.goormy.hackathon.entity.Post;
 import com.goormy.hackathon.entity.User;
@@ -67,12 +65,12 @@ public class LikeFunction {
     @Transactional
     public void addLike(Long postId, Long userId) {
         // 캐시에서 좋아요에 대한 정보를 먼저 조회함
-        Integer findPostLike = likeRedisRepository.findPostLikeFromCache(postId, userId);
+        Integer findPostLike = likeRedisRepository.findPostLikeByPostIdAndUserId(postId, userId);
 
         if (findPostLike == null) {
             // 캐시에 좋아요에 대한 정보가 없다면,
             // Key = postlike:{postId}, Field = {userId}, Value = 1 로 '좋아요' 정보 생성
-            likeRedisRepository.update(postId, userId, 1);
+            likeRedisRepository.set(postId, userId, 1);
         }else if (findPostLike == -1) {
             // '좋아요 취소' 정보가 있는 상태라면
             // '좋아요'를 다시 누른 것이기 때문에 '취소 정보'를 삭제
@@ -86,12 +84,12 @@ public class LikeFunction {
     @Transactional
     public void cancelLike(Long postId, Long userId) {
         // 캐시에서 좋아요 정보를 먼저 조회함
-        Integer findPostLike = likeRedisRepository.findPostLikeFromCache(postId, userId);
+        Integer findPostLike = likeRedisRepository.findPostLikeByPostIdAndUserId(postId, userId);
 
         // 캐시에 좋아요에 대한 정보가 없다면,
         // Key = postlike:{postId}, Field = {userId}, Value = -1 로 '좋아요 취소' 정보 생성
         if (findPostLike == null) {
-            likeRedisRepository.update(postId,userId,-1);
+            likeRedisRepository.set(postId,userId,-1);
         }else if (findPostLike == 1) {
             // '좋아요'라는 정보가 있는 상태라면
             // '좋아요 취소'를 다시 누른 것이기 때문에 '좋아요' 정보를 삭젳
@@ -104,7 +102,7 @@ public class LikeFunction {
      * */
     public boolean findLike(Long postId, Long userId) {
         // 1. 캐시로부터 '좋아요'에 대한 정보를 조회함
-        Integer value = likeRedisRepository.findPostLikeFromCache(postId, userId);
+        Integer value = likeRedisRepository.findPostLikeByPostIdAndUserId(postId, userId);
 
         if (value == null) {          // 캐시에 정보가 없다면 DB에서 조회되는지 여부에 따라 true/false 리턴
             return likeRepository.isExistByPostIdAndUserId(postId, userId);
@@ -127,7 +125,7 @@ public class LikeFunction {
         for (String key: postLikeKeySet) {
 
             // 2-1. Key로 Hash 자료구조를 조회함. field = userId / value = 1 or -1
-            Map<Object, Object> result = likeRedisRepository.findByKey(key);
+            Map<Object, Object> result = likeRedisRepository.findPostLikeByKey(key);
 
             // 2-2. key를 파싱하여 postId를 구함
             String[] split = key.split(":");

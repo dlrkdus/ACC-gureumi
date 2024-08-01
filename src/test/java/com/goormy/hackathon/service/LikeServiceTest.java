@@ -130,10 +130,10 @@ class LikeServiceTest {
     void 캐시로부터_DB로_반영() {
 
         // given
-        likeRedisRepository.update(3L, 1L, 1);
-        likeRedisRepository.update(3L, 2L, 1);
-        likeRedisRepository.update(3L, 3L, 1);
-        likeRedisRepository.update(4L, 3L, -1);
+        likeRedisRepository.set(3L, 1L, 1);
+        likeRedisRepository.set(3L, 2L, 1);
+        likeRedisRepository.set(3L, 3L, 1);
+        likeRedisRepository.set(4L, 3L, -1);
 
         // when
         likeFunction.dumpToDB();

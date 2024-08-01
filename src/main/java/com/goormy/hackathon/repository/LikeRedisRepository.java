@@ -16,7 +16,7 @@ public class LikeRedisRepository {
     /**
      * @description '좋아요' 정보를 업데이트 하는 함수
      * */
-    public void update(Long postId, Long userId, Integer value) {
+    public void set(Long postId, Long userId, Integer value) {
         String key = "postlike:" + postId.toString();
         String field = userId.toString();
 
@@ -36,7 +36,7 @@ public class LikeRedisRepository {
     /**
      * @description postId와 userId에 대한 value를 조회
      * */
-    public Integer findPostLikeFromCache(Long postId, Long userId) {
+    public Integer findPostLikeByPostIdAndUserId(Long postId, Long userId) {
         String key = "postlike:" + postId.toString();
         String field = userId.toString();
 
@@ -46,7 +46,7 @@ public class LikeRedisRepository {
     /**
      * @description Key에 대한 모든 field와 value를 조회
      * */
-    public Map<Object, Object> findByKey(String key) {
+    public Map<Object, Object> findPostLikeByKey(String key) {
         return redisTemplate.opsForHash().entries(key);
     }
 
