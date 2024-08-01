@@ -9,7 +9,6 @@ import com.goormy.hackathon.repository.HashtagRepository;
 import com.goormy.hackathon.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.List;
 import java.util.Map;
@@ -62,7 +61,6 @@ public class FollowFunction{
     }
 
     // Redis 데이터를 RDBMS에 저장하고 Redis 비우기
-    @Scheduled(cron = "0 0 0 * * *") // 매일 자정에 실행
     public void migrateData() {
         // Redis에서 모든 팔로우 데이터 가져오기
         List<Follow> follows = followRedisRepository.getAllFollows();
@@ -72,7 +70,6 @@ public class FollowFunction{
         followRepository.saveAll(follows);
 
         // Redis 비우기
-
         System.out.println("Redis 데이터를 RDBMS로 옮기고 Redis를 초기화했습니다.");
     }
 
