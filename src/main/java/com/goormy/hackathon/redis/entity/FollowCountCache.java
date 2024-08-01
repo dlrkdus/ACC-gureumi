@@ -19,7 +19,7 @@ public class FollowCountCache implements Serializable {
     }
 
     public String getKey() {
-        return "FollowCount:" + hashtagId;
+        return "followcount:" + hashtagId;
     }
 
     public String getField() {

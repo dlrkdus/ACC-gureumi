@@ -13,7 +13,7 @@ public class FeedUserRedisRepository {
     private final RedisTemplate<String, Object> redisTemplate;
 
     public void set(Long userId, Post post) {
-        String key = "FeedUser:" + userId;
+        String key = "feeduser:" + userId;
         Object value = new FeedSimpleInfo(post);
         redisTemplate.opsForList().leftPush(key, value);
     }

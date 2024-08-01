@@ -16,7 +16,7 @@ public class FollowCountRedisRepository {
     }
 
     public Integer findFollowCountByHashtagId(Long hashtagId) {
-        String key = "FollowCount:" + hashtagId;
+        String key = "followcount:" + hashtagId;
         String field = String.valueOf(hashtagId);
         return (Integer) redisTemplate.opsForHash().get(key, field);
     }

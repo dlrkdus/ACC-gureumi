@@ -37,7 +37,7 @@ public class PostCache implements Serializable {
     }
 
     public String getKey() {
-        return "Post:" + postId;
+        return "post:" + postId;
     }
 
 }
