@@ -35,7 +35,7 @@ jobs:
       - name: Create deployment package
         run: |
           mkdir -p deployment
-          cp build/libs/*.jar deployment/
+          cp build/distributions/lambda-function.zip deployment/
           if [ -d "lib" ]; then
             cp -R lib/* deployment/
           fi
