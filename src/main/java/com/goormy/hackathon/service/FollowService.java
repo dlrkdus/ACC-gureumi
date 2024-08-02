@@ -24,6 +24,7 @@ public class FollowService {
     private String queueUrl;
 
     public void sendFollowRequest(long userId, long hashtagId) {
+
         sendRequest(userId, hashtagId, "follow");
     }
 

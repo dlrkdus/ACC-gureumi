@@ -6,13 +6,13 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-public class FollowCountRedisRepository_sieun {
+public class FollowCountRedisRepository {
 
     private final RedisTemplate<String, Integer> integerRedisTemplate;
     private static final String FOLLOWING_COUNT_KEY = "follow_count:";
 
     @Autowired
-    public FollowCountRedisRepository_sieun(RedisTemplate<String, Integer> integerRedisTemplate) {
+    public FollowCountRedisRepository(RedisTemplate<String, Integer> integerRedisTemplate) {
         this.integerRedisTemplate = integerRedisTemplate;
     }
 

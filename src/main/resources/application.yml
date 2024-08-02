@@ -4,7 +4,7 @@ spring:
       host: localhost
       port: 6379
   datasource:
-    url: ${MYSQL_URL:jdbc:mysql://localhost}:${MYSQL_PORT:3306}/${MYSQL_SCHEMA:gureumi-rds}
+    url: ${MYSQL_URL:jdbc:mysql://gureumi-rds.cfgaqgkoy31u.ap-northeast-2.rds.amazonaws.com}:${MYSQL_PORT:3306}/${MYSQL_SCHEMA:gureumi-rds}
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: ${MYSQL_USERNAME:admin}
     password: ${MYSQL_PASSWORD:rnfmalelql3}

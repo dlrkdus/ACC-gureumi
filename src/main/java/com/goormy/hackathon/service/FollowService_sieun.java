@@ -2,9 +2,8 @@ package com.goormy.hackathon.service;
 
 import com.goormy.hackathon.entity.Hashtag;
 import com.goormy.hackathon.entity.User;
-import com.goormy.hackathon.repository.FollowCountRedisRepository_sieun;
-import com.goormy.hackathon.repository.FollowRepository_sieun;
-import jakarta.transaction.Transactional;
+import com.goormy.hackathon.repository.FollowCountRedisRepository;
+import com.goormy.hackathon.repository.FollowRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,16 +13,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FollowService_sieun {
 
-    private final FollowRepository_sieun followRepositorySieun;
-    private final FollowCountRedisRepository_sieun followCountRedisRepositorySieun;
+    private final FollowRepository followRepository;
+    private final FollowCountRedisRepository followCountRedisRepositorySieun;
 
     // 유저가 팔로우하고 있는 해시태그 목록 조회
     public List<Hashtag> getFollowedHashtags(User user) {
-        return followRepositorySieun.findHashtagsByUser(user);
+        return followRepository.findHashtagsByUser(user);
     }
 
     // 팔로우, 언팔로우 캐시 부분
-    @Transactional
     public void followHashtag(Long hashtagId) {
         Integer currentCount = followCountRedisRepositorySieun.getFollowCount(hashtagId);
         if (currentCount == null) {
@@ -33,7 +31,6 @@ public class FollowService_sieun {
         }
     }
 
-    @Transactional
     public void unfollowHashtag(Long hashtagId) {
         Integer currentCount = followCountRedisRepositorySieun.getFollowCount(hashtagId);
         if (currentCount != null && currentCount > 0) {
