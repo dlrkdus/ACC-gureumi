@@ -1,11 +1,10 @@
 package com.goormy.hackathon.controller;
 
-import com.goormy.hackathon.service.LikeService;
+import com.goormy.hackathon.service.LikeSQSService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("")
 public class LikeController {
 
-    private final LikeService likeService;
+    private final LikeSQSService likeService;
 
     @PostMapping("/likes")
     public ResponseEntity<String> addLike(

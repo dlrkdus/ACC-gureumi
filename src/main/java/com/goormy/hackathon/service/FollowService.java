@@ -1,55 +1,40 @@
 package com.goormy.hackathon.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import com.goormy.hackathon.entity.Hashtag;
+import com.goormy.hackathon.entity.User;
+import com.goormy.hackathon.repository.FollowCountRedisRepository;
+import com.goormy.hackathon.repository.FollowRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import software.amazon.awssdk.services.sqs.SqsClient;
-import software.amazon.awssdk.services.sqs.model.SendMessageRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import software.amazon.awssdk.services.sqs.model.SendMessageResponse;
 
-import java.util.Map;
+import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class FollowService {
-    private static final Logger logger = LoggerFactory.getLogger(FollowService.class);
 
+    private final FollowRepository followRepository;
+    private final FollowCountRedisRepository followCountRedisRepositorySieun;
 
-    @Autowired
-    private SqsClient sqsClient;
-
-    @Value("${spring.cloud.aws.sqs.queue-url}")
-    private String queueUrl;
-
-    public void sendFollowRequest(long userId, long hashtagId) {
-
-        sendRequest(userId, hashtagId, "follow");
+    // 유저가 팔로우하고 있는 해시태그 목록 조회
+    public List<Hashtag> getFollowedHashtags(User user) {
+        return followRepository.findHashtagsByUser(user);
     }
 
-    public void sendUnfollowRequest(long userId, long hashtagId) {
-        sendRequest(userId, hashtagId, "unfollow");
+    // 팔로우, 언팔로우 캐시 부분
+    public void followHashtag(Long hashtagId) {
+        Integer currentCount = followCountRedisRepositorySieun.getFollowCount(hashtagId);
+        if (currentCount == null) {
+            followCountRedisRepositorySieun.setFollowCount(hashtagId, 1); // 처음 팔로우인 경우 초기화
+        } else {
+            followCountRedisRepositorySieun.incrementFollowCount(hashtagId); // 기존 팔로우 수 증가
+        }
     }
 
-    public void sendRequest(long userId, long hashtagId, String action) {
-        try{
-        ObjectMapper objectMapper = new ObjectMapper();
-        String messageBody = objectMapper.writeValueAsString(Map.of(
-                "userId", userId,
-                "hashtagId", hashtagId,
-                "action",action
-        ));
-        SendMessageRequest sendMsgRequest = SendMessageRequest.builder()
-                .queueUrl(queueUrl)
-                .messageBody(messageBody)
-                .build();
-        logger.info("메시지 송신 - action: {}, userId: {}, hashtagId: {}", action, userId, hashtagId);
-        SendMessageResponse sendMsgResponse = sqsClient.sendMessage(sendMsgRequest);
-        logger.info("메시지가 전달되었습니다: {}, Message ID: {}, HTTP Status: {}",
-                messageBody, sendMsgResponse.messageId(), sendMsgResponse.sdkHttpResponse().statusCode());
-        } catch (Exception e) {
-            logger.error("메시지 전송 실패", e);
+    public void unfollowHashtag(Long hashtagId) {
+        Integer currentCount = followCountRedisRepositorySieun.getFollowCount(hashtagId);
+        if (currentCount != null && currentCount > 0) {
+            followCountRedisRepositorySieun.decrementFollowCount(hashtagId); // 팔로우 수 감소
         }
     }
 }

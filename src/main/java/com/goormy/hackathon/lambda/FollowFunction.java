@@ -5,6 +5,7 @@ import com.goormy.hackathon.entity.Follow;
 import com.goormy.hackathon.entity.Hashtag;
 import com.goormy.hackathon.entity.User;
 import com.goormy.hackathon.repository.*;
+import com.goormy.hackathon.service.FollowService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -21,19 +22,19 @@ public class FollowFunction{
     private final UserRepository userRepository;
     private final HashtagRepository hashtagRepository;
     private final FollowRedisRepository followRedisRepository;
-    private final FollowCountRedisRepository followCountRedisRepository;
+    private final FollowService followServiceSieun;
     private final ObjectMapper objectMapper;
     private static final Logger logger = LoggerFactory.getLogger(FollowFunction.class);
 
 
     public FollowFunction(FollowRepository followRepository, UserRepository userRepository, HashtagRepository hashtagRepository, FollowRedisRepository followRedisRepository
-    , ObjectMapper objectMapper, FollowCountRedisRepository followCountRedisRepositorySieun) {
+    , ObjectMapper objectMapper, FollowService followServiceSieun) {
         this.followRepository = followRepository;
         this.userRepository = userRepository;
         this.hashtagRepository = hashtagRepository;
         this.followRedisRepository = followRedisRepository;
         this.objectMapper = objectMapper;
-        this.followCountRedisRepository = followCountRedisRepositorySieun;
+        this.followServiceSieun = followServiceSieun;
     }
 
     @Bean
@@ -59,12 +60,7 @@ public class FollowFunction{
                     // follow_list:{hashtagId} 저장
                     followRedisRepository.set(hashtagId, userId);
                     // follow_count:{hashtagId} 저장
-                    Integer currentCount = followCountRedisRepository.getFollowCount(hashtagId);
-                    if (currentCount == null) {
-                        followCountRedisRepository.setFollowCount(hashtagId, 1); // 처음 팔로우인 경우 초기화
-                    } else {
-                        followCountRedisRepository.incrementFollowCount(hashtagId); // 기존 팔로우 수 증가
-                    }
+                    followServiceSieun.followHashtag(hashtagId);
                     System.out.println("팔로우 성공: " + messageBody);
                 } else if ("unfollow".equals(action)) {
                     // follow_list:{hashtagId} 삭제
@@ -72,10 +68,7 @@ public class FollowFunction{
                             .orElseThrow(() -> new RuntimeException("존재하지 않는 팔로우입니다. userId: " + userId + " hashtagId: " + hashtagId));
                     followRedisRepository.delete(hashtagId, userId);
                     // follow_count:{hashtagId} 삭제
-                    Integer currentCount = followCountRedisRepository.getFollowCount(hashtagId);
-                    if (currentCount != null && currentCount > 0) {
-                        followCountRedisRepository.decrementFollowCount(hashtagId); // 팔로우 수 감소
-                    }
+                    followServiceSieun.unfollowHashtag(hashtagId);
                     System.out.println("팔로우 취소 성공: " + messageBody);
                 } else {
                     System.out.println("존재하지 않는 action입니다 : " + action);

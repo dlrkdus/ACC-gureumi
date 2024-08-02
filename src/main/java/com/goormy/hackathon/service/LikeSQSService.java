@@ -13,7 +13,7 @@ import software.amazon.awssdk.services.sqs.model.SendMessageRequest;
 import software.amazon.awssdk.services.sqs.model.SendMessageResponse;
 
 @Service
-public class LikeService {
+public class LikeSQSService {
 
     private static final Logger logger = LoggerFactory.getLogger(LikeFunction.class);
 

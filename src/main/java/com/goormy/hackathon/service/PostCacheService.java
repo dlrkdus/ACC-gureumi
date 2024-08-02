@@ -7,11 +7,9 @@ import com.goormy.hackathon.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
-public class PostCacheService_SY {
+public class PostCacheService {
 
     private final PostRedisRepository_SY postRedisRepositorySY;
     private final FollowCountRedisRepository_SY followCountRedisRepositorySY;

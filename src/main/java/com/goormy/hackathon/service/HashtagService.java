@@ -14,7 +14,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class HashtagService_SY {
+public class HashtagService {
 
     private final HashtagRepository_SY hashtagRepositorySY;
     private final FollowCountRedisRepository_SY followCountRedisRepositorySY;
