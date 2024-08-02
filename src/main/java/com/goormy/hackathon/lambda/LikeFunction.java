@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Configuration
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class LikeFunction {
+public class LikeFunction implements Consumer<Object>{
 
     private final LikeRedisRepository likeRedisRepository;
     private final LikeRepository likeRepository;
@@ -28,35 +28,35 @@ public class LikeFunction {
     private final PostRepository postRepository;
     private final ObjectMapper objectMapper;
 
-    @Bean
-    public Consumer<Map<String, Object>> processLike() {
-        return messageBody -> {
-            try {
-                List<Map<String, Object>> records = (List<Map<String, Object>>) messageBody.get("Records");
-                String bodyString = (String) records.get(0).get("body");
-                Map<String, Object> body = objectMapper.readValue(bodyString, Map.class);
+    @Override
+    public void accept(Object messageBody) {
+        try {
+            Map<String, Object> messageMap = (Map<String, Object>) messageBody;
+            List<Map<String, Object>> records = (List<Map<String, Object>>) messageMap.get("Records");
+            String bodyString = (String) records.get(0).get("body");
+            Map<String, Object> body = objectMapper.readValue(bodyString, Map.class);
 
-                long userId = ((Number) body.get("userId")).longValue();
-                long postId = ((Number) body.get("postId")).longValue();
-                String action = (String) body.get("action");
+            long userId = ((Number) body.get("userId")).longValue();
+            long postId = ((Number) body.get("postId")).longValue();
+            String action = (String) body.get("action");
 
-                User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("존재하지 않는 사용자입니다. userId: " + userId));
-                Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("존재하지 않는 포스트 입니다. postId: " + postId));
+            User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("존재하지 않는 사용자입니다. userId: " + userId));
+            Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("존재하지 않는 포스트 입니다. postId: " + postId));
 
-                if ("like".equals(action)) {
-                    addLike(postId,userId);
-                    System.out.println("좋아요 성공: " + messageBody);
-                } else if ("unlike".equals(action)) {
-                    cancelLike(postId,userId);
-                    System.out.println("좋아요 취소 성공: " + messageBody);
-                } else {
-                    System.out.println("존재하지 않는 action입니다 : " + action);
-                }
-            } catch (Exception e) {
-                System.err.println("메시지 전송 실패: " + messageBody);
-                e.printStackTrace();
+            if ("like".equals(action)) {
+                addLike(postId,userId);
+                System.out.println("좋아요 성공: " + messageBody);
+            } else if ("unlike".equals(action)) {
+                cancelLike(postId,userId);
+                System.out.println("좋아요 취소 성공: " + messageBody);
+            } else {
+                System.out.println("존재하지 않는 action입니다 : " + action);
             }
-        };
+
+        } catch (Exception e) {
+            System.err.println("메시지 전송 실패: " + messageBody);
+            e.printStackTrace();
+        }
     }
 
     /**
