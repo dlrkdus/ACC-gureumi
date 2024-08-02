@@ -1,0 +1,44 @@
+spring:
+  data:
+    redis:
+      host: ${{ secrets.REDIS_HOST }}
+      port: ${{ secrets.REDIS_PORT }}
+  datasource:
+    url: ${{ secrets.MYSQL_URL }}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${{ secrets.MYSQL_USERNAME }}
+    password: ${{ secrets.MYSQL_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+  profiles:
+    include:
+      - redis
+      - swagger
+  cloud:
+    aws:
+      region:
+        static: ${{ secrets.AWS_REGION }}
+      credentials:
+        access-key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        secret-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      sqs:
+        queue-url-like: ${{ secrets.AWS_SQS_QUEUE_URL_LIKE }}
+        queue-url-follow: ${{ secrets.AWS_SQS_QUEUE_URL_FOLLOW }}
+      s3:
+        bucket: ${{ secrets.AWS_S3_BUCKET }}
+      cloudfront:
+        distribution-domain: ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_DOMAIN }}
+
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
