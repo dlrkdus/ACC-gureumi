@@ -50,6 +50,8 @@ dependencies {
 	implementation 'redis.clients:jedis:4.0.1'
 	implementation 'com.amazonaws:aws-lambda-java-core:1.2.1'
 	implementation 'com.amazonaws:aws-lambda-java-events:3.11.0'
+	implementation 'org.springframework.cloud:spring-cloud-function-adapter-aws:4.0.0'
+	implementation 'org.springframework.cloud:spring-cloud-starter-function-web:4.0.0'
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'

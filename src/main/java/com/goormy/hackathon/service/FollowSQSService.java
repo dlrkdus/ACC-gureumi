@@ -20,7 +20,7 @@ public class FollowSQSService {
     @Autowired
     private SqsClient sqsClient;
 
-    @Value("${spring.cloud.aws.sqs.queue-url}")
+    @Value("${spring.cloud.aws.sqs.queue-url-follow}")
     private String queueUrl;
 
     public void sendFollowRequest(long userId, long hashtagId) {

@@ -12,8 +12,7 @@ import com.goormy.hackathon.service.FollowService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
-
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -33,10 +32,13 @@ public class FollowFunction implements Consumer<Object> {
     @Override
     public void accept(Object messageBody) {
         try {
-            Map<String, Object> messageMap= (Map<String, Object>) messageBody;
+            String messageString = new String((byte[]) messageBody, StandardCharsets.UTF_8);
+
+            Map<String, Object> messageMap = objectMapper.readValue(messageString, Map.class);
             List<Map<String, Object>> records = (List<Map<String, Object>>) messageMap.get("Records");
             String bodyString = (String) records.get(0).get("body");
             Map<String, Object> body = objectMapper.readValue(bodyString, Map.class);
+
 
             // userId와 hashtagId를 Number로 파싱하고 long으로 변환
             long userId = ((Number) body.get("userId")).longValue();
@@ -54,6 +56,7 @@ public class FollowFunction implements Consumer<Object> {
                 // follow_count:{hashtagId} 저장
                 followService.followHashtag(hashtagId);
                 log.info("팔로우 성공: " + messageBody);
+                System.out.println("팔로우 성공: " + messageBody);
             } else if ("unfollow".equals(action)) {
                 // follow_list:{hashtagId} 삭제
                 Follow follow = followRepository.findByUserIdAndHashTagId(userId, hashtagId)
@@ -69,12 +72,7 @@ public class FollowFunction implements Consumer<Object> {
             log.error("메시지 전송 실패: " + messageBody, e);
         }
     }
-
-//    // Redis 데이터를 RDBMS에 저장하고 Redis 비우기
-//    public void migrateData() {
-//        List<Follow> follows = followListRedisRepository.getAllFollows();
-//        followRepository.deleteAll();
-//        followRepository.saveAll(follows);
-//        log.info("Redis 데이터를 RDBMS로 옮기고 Redis를 초기화했습니다.");
-//    }
 }
+
+
+

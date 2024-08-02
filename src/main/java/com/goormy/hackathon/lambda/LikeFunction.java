@@ -8,6 +8,8 @@ import com.goormy.hackathon.repository.Redis.LikeRedisRepository;
 import com.goormy.hackathon.repository.JPA.LikeRepository;
 import com.goormy.hackathon.repository.JPA.PostRepository;
 import com.goormy.hackathon.repository.JPA.UserRepository;
+
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -31,7 +33,9 @@ public class LikeFunction implements Consumer<Object>{
     @Override
     public void accept(Object messageBody) {
         try {
-            Map<String, Object> messageMap = (Map<String, Object>) messageBody;
+            String messageString = new String((byte[]) messageBody, StandardCharsets.UTF_8);
+
+            Map<String, Object> messageMap = objectMapper.readValue(messageString, Map.class);
             List<Map<String, Object>> records = (List<Map<String, Object>>) messageMap.get("Records");
             String bodyString = (String) records.get(0).get("body");
             Map<String, Object> body = objectMapper.readValue(bodyString, Map.class);
