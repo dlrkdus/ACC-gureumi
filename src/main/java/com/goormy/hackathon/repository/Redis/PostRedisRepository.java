@@ -1,5 +1,6 @@
-package com.goormy.hackathon.repository;
+package com.goormy.hackathon.repository.Redis;
 
+import com.goormy.hackathon.redis.entity.PostCache_SY;
 import com.goormy.hackathon.redis.entity.PostRedis_DS;
 import jakarta.annotation.PostConstruct;
 import java.util.List;
@@ -11,16 +12,18 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class PostRedisRepository_DS {
+public class PostRedisRepository {
 
-    private final RedisTemplate<String, PostRedis_DS> redisTemplate;
+    private final RedisTemplate<String, PostRedis_DS> redisTemplate_postRedis;
+    private final RedisTemplate<String, Object> redisTemplate;
+
     private static final String POST_KEY = "post:";
 
     private ValueOperations<String, PostRedis_DS> valueOperations;
 
     @PostConstruct
     private void init() {
-        valueOperations = redisTemplate.opsForValue();
+        valueOperations = redisTemplate_postRedis.opsForValue();
     }
 
     public void set(Long postId, PostRedis_DS value) {
@@ -36,5 +39,9 @@ public class PostRedisRepository_DS {
         return postIdList.stream()
             .map(postId -> valueOperations.get(POST_KEY + postId))
             .toList();
+    }
+
+    public void set(PostCache_SY postCacheSY) {
+        redisTemplate.opsForList().leftPush(postCacheSY.getKey(), postCacheSY);
     }
 }

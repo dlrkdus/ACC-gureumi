@@ -9,14 +9,9 @@ import com.goormy.hackathon.entity.User;
 import com.goormy.hackathon.redis.entity.PostRedis_DS;
 import com.goormy.hackathon.redis.entity.PostSimpleInfo_DS;
 import com.goormy.hackathon.redis.entity.UserRedis_DS;
-import com.goormy.hackathon.repository.FeedHashtagRedisRepository_DS;
-import com.goormy.hackathon.repository.FeedUserRedisRepository_DS;
-import com.goormy.hackathon.repository.FeedUserSortRedisRepository_DS;
-import com.goormy.hackathon.repository.PostRedisRepository_DS;
-import com.goormy.hackathon.repository.PostRepository;
-import com.goormy.hackathon.repository.RecentUpdateRedisRepository_DS;
-import com.goormy.hackathon.repository.UserRedisRepository_DS;
-import com.goormy.hackathon.repository.UserRespository;
+import com.goormy.hackathon.repository.JPA.PostRepository;
+import com.goormy.hackathon.repository.JPA.UserRepository;
+import com.goormy.hackathon.repository.Redis.*;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -31,17 +26,17 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class GetFeedService {
 
-    private final UserRespository userRespository;
+    private final UserRepository userRespository;
     private final PostRepository postRepository;
 
     private final LocalDateTimeConverter_DS localDateTimeConverter;
 
-    private final FeedHashtagRedisRepository_DS feedHashtagRedisRepository;
-    private final FeedUserRedisRepository_DS feedUserRedisRepository;
-    private final FeedUserSortRedisRepository_DS feedUserSortRedisRepository;
-    private final PostRedisRepository_DS postRedisRepository;
-    private final RecentUpdateRedisRepository_DS recentUpdateRedisRepository;
-    private final UserRedisRepository_DS userRedisRepository;
+    private final FeedHashtagRedisRepository feedHashtagRedisRepository;
+    private final FeedUserRedisRepository feedUserRedisRepository;
+    private final FeedUserSortRedisRepository feedUserSortRedisRepository;
+    private final PostRedisRepository postRedisRepository;
+    private final RecentUpdateRedisRepository recentUpdateRedisRepository;
+    private final UserRedisRepository userRedisRepository;
 
     // 1. 사용자 정보를 가져옴
     private UserRedis_DS getUser(Long userId) {

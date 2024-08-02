@@ -1,12 +1,10 @@
-package com.goormy.hackathon.repository;
+package com.goormy.hackathon.repository.JPA;
 
 import com.goormy.hackathon.entity.Like;
-import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 public interface LikeRepository extends JpaRepository<Like, Long> {
 

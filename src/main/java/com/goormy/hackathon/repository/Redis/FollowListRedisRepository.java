@@ -1,6 +1,7 @@
-package com.goormy.hackathon.repository;
+package com.goormy.hackathon.repository.Redis;
 
 import com.goormy.hackathon.entity.Follow;
+import com.goormy.hackathon.repository.JPA.FollowRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 @Repository
-public class FollowRedisRepository {
+public class FollowListRedisRepository {
 
     @Autowired
     RedisTemplate<String, Object> redisTemplate;
@@ -50,6 +51,12 @@ public class FollowRedisRepository {
         }
 
         return follows;
+    }
+
+    // TODO: 수정 필요 - save 하는 쪽이 어떤 식으로 저장하느냐에 따라 호출 구현이 다를 듯
+    public List<Integer> findUserIdListByHashtagId(Long hashtagId) {
+        String key = "followlist:" + hashtagId;
+        return (List<Integer>) redisTemplate.opsForValue().get(key);
     }
 
 

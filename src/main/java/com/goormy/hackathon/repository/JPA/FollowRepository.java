@@ -1,4 +1,4 @@
-package com.goormy.hackathon.repository;
+package com.goormy.hackathon.repository.JPA;
 
 import com.goormy.hackathon.entity.Follow;
 import com.goormy.hackathon.entity.Hashtag;

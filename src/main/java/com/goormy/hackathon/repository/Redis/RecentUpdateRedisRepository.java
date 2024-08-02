@@ -1,4 +1,4 @@
-package com.goormy.hackathon.repository;
+package com.goormy.hackathon.repository.Redis;
 
 import jakarta.annotation.PostConstruct;
 import java.time.Duration;
@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class RecentUpdateRedisRepository_DS {
+public class RecentUpdateRedisRepository {
 
     private final StringRedisTemplate stringRedisTemplate;
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;

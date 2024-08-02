@@ -3,7 +3,7 @@ package com.goormy.hackathon.service;
 import com.goormy.hackathon.entity.Hashtag;
 import com.goormy.hackathon.entity.Post;
 import com.goormy.hackathon.redis.entity.PostCache_SY;
-import com.goormy.hackathon.repository.*;
+import com.goormy.hackathon.repository.Redis.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,15 +11,15 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PostCacheService {
 
-    private final PostRedisRepository_SY postRedisRepositorySY;
-    private final FollowCountRedisRepository_SY followCountRedisRepositorySY;
-    private final FollowListRedisRepository_SY followListRedisRepositorySY;
-    private final FeedUserRedisRepository_SY feedUserRedisRepositorySY;
-    private final FeedHashtagRedisRepository_SY feedHashtagRedisRepositorySY;
+    private final PostRedisRepository postRedisRepository;
+    private final FollowCountRedisRepository followCountRedisRepository;
+    private final FollowListRedisRepository followListRedisRepository;
+    private final FeedUserRedisRepository feedUserRedisRepository;
+    private final FeedHashtagRedisRepository feedHashtagRedisRepository;
 
     // TODO: 이벤트로 발행한 후 이벤트를 받아 Redis에 비동기로 저장
     public void cache(Post post) {
-        postRedisRepositorySY.set(new PostCache_SY(post));
+        postRedisRepository.set(new PostCache_SY(post));
         for (var hashtag : post.getPostHashtags()) {
             if (isPopular(hashtag)) {
                 pullModel(hashtag, post);
@@ -30,7 +30,7 @@ public class PostCacheService {
     }
 
     private boolean isPopular(Hashtag hashtag) {
-        var followCount = followCountRedisRepositorySY.findFollowCountByHashtagId(hashtag.getId());
+        var followCount = followCountRedisRepository.findFollowCountByHashtagId(hashtag.getId());
         if (followCount != null ) {
             return followCount >= 5000;
         }
@@ -38,13 +38,13 @@ public class PostCacheService {
     }
 
     private void pushModel(Hashtag hashtag, Post post) {
-        var userIdList = followListRedisRepositorySY.findUserIdListByHashtagId(hashtag.getId());
+        var userIdList = followListRedisRepository.findUserIdListByHashtagId(hashtag.getId());
         userIdList.forEach(userId -> {
-            feedUserRedisRepositorySY.set(Long.valueOf(userId), post);
+            feedUserRedisRepository.set(Long.valueOf(userId), post);
         });
     }
 
     private void pullModel(Hashtag hashtag, Post post) {
-        feedHashtagRedisRepositorySY.set(hashtag.getId(), post);
+        feedHashtagRedisRepository.set(hashtag.getId(), post);
     }
 }

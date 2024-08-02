@@ -1,6 +1,7 @@
 
-package com.goormy.hackathon.repository;
+package com.goormy.hackathon.repository.Redis;
 
+import com.goormy.hackathon.redis.entity.FollowCountCache_SY;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -10,10 +11,13 @@ public class FollowCountRedisRepository {
 
     private final RedisTemplate<String, Integer> integerRedisTemplate;
     private static final String FOLLOWING_COUNT_KEY = "follow_count:";
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Autowired
-    public FollowCountRedisRepository(RedisTemplate<String, Integer> integerRedisTemplate) {
+    public FollowCountRedisRepository(RedisTemplate<String, Integer> integerRedisTemplate
+    , RedisTemplate<String, Object> redisTemplate) {
         this.integerRedisTemplate = integerRedisTemplate;
+        this.redisTemplate = redisTemplate;
     }
 
     public Integer getFollowCount(Long hashtagId) {
@@ -34,5 +38,15 @@ public class FollowCountRedisRepository {
     public void decrementFollowCount(Long hashtagId) {
         String key = FOLLOWING_COUNT_KEY + hashtagId;
         integerRedisTemplate.opsForValue().decrement(key, 1);
+    }
+
+    public void set(FollowCountCache_SY followCountCacheSY) {
+        redisTemplate.opsForHash().put(followCountCacheSY.getKey(), followCountCacheSY.getField(), followCountCacheSY.getFollowCount());
+    }
+
+    public Integer findFollowCountByHashtagId(Long hashtagId) {
+        String key = "followcount:" + hashtagId;
+        String field = String.valueOf(hashtagId);
+        return (Integer) redisTemplate.opsForHash().get(key, field);
     }
 }

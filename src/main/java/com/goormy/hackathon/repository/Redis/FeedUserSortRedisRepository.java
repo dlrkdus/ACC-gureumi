@@ -1,4 +1,4 @@
-package com.goormy.hackathon.repository;
+package com.goormy.hackathon.repository.Redis;
 
 import jakarta.annotation.PostConstruct;
 import java.util.List;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class FeedUserSortRedisRepository_DS {
+public class FeedUserSortRedisRepository {
 
     private final RedisTemplate<String, Long> redisTemplate;
     private static final String FEED_USER_SORTED_KEY = "feedusersort:";

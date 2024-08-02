@@ -1,4 +1,4 @@
-package com.goormy.hackathon.repository;
+package com.goormy.hackathon.repository.Redis;
 
 import com.goormy.hackathon.redis.entity.UserRedis_DS;
 import jakarta.annotation.PostConstruct;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class UserRedisRepository_DS {
+public class UserRedisRepository {
 
     private final RedisTemplate<String, UserRedis_DS> redisTemplate;
     private static final String USER_KEY = "user:";

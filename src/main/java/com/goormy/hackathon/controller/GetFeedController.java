@@ -1,12 +1,11 @@
 package com.goormy.hackathon.controller;
 
 import com.goormy.hackathon.common.util.LocalDateTimeConverter_DS;
-import com.goormy.hackathon.common.util.LocalDateTimeConverter_DS;
 import com.goormy.hackathon.dto.request.AddFeedUser;
 import com.goormy.hackathon.dto.response.GetFeedResponseDto;
 import com.goormy.hackathon.redis.entity.PostSimpleInfo_DS;
-import com.goormy.hackathon.repository.FeedHashtagRedisRepository_DS;
-import com.goormy.hackathon.repository.FeedUserRedisRepository_DS;
+import com.goormy.hackathon.repository.Redis.FeedHashtagRedisRepository;
+import com.goormy.hackathon.repository.Redis.FeedUserRedisRepository;
 import com.goormy.hackathon.service.GetFeedService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -27,8 +26,8 @@ public class GetFeedController {
     private final GetFeedService getFeedService;
     private final LocalDateTimeConverter_DS localDateTimeConverter;
 
-    private final FeedUserRedisRepository_DS feedUserRedisRepository;
-    private final FeedHashtagRedisRepository_DS feedHashtagRedisRepository;
+    private final FeedUserRedisRepository feedUserRedisRepository;
+    private final FeedHashtagRedisRepository feedHashtagRedisRepository;
 
     /**
      * [GET] 사용자 맞춤형 피드 조회 기능

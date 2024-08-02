@@ -2,8 +2,8 @@ package com.goormy.hackathon.service;
 
 import com.goormy.hackathon.entity.Hashtag;
 import com.goormy.hackathon.entity.User;
-import com.goormy.hackathon.repository.FollowCountRedisRepository;
-import com.goormy.hackathon.repository.FollowRepository;
+import com.goormy.hackathon.repository.Redis.FollowCountRedisRepository;
+import com.goormy.hackathon.repository.JPA.FollowRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
