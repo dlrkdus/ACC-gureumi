@@ -61,4 +61,8 @@ public class Post extends BaseTimeEntity {
                 .toList();
     }
 
+    public void setLikeCount(Integer likeCount) {
+        this.likeCount = likeCount;
+    }
+
 }
