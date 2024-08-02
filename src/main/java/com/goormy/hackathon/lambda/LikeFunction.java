@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -75,6 +74,7 @@ public class LikeFunction implements Consumer<Object>{
             // 캐시에 좋아요에 대한 정보가 없다면,
             // Key = postlike:{postId}, Field = {userId}, Value = 1 로 '좋아요' 정보 생성
             likeRedisRepository.set(postId, userId, 1);
+
         }else if (findPostLike == -1) {
             // '좋아요 취소' 정보가 있는 상태라면
             // '좋아요'를 다시 누른 것이기 때문에 '취소 정보'를 삭제
@@ -128,6 +128,8 @@ public class LikeFunction implements Consumer<Object>{
         // 2. Key마다 postId, userId, value를 조회하는 과정
         for (String key: postLikeKeySet) {
 
+            int likeCount = 0;
+
             // 2-1. Key로 Hash 자료구조를 조회함. field = userId / value = 1 or -1
             Map<Object, Object> result = likeRedisRepository.findPostLikeByKey(key);
 
@@ -146,13 +148,18 @@ public class LikeFunction implements Consumer<Object>{
                     User user = userRepository.getReferenceById(userId);
                     Post post = postRepository.getReferenceById(postId);
                     likeRepository.save(new Like(user, post));
+                    likeCount++;
                 }else if (value == -1) {  // 3-2. 좋아요를 취소한 상태였다면 RDB에 delete 쿼리 발생
                     likeRepository.deleteByPostIdAndUserId(postId, userId);
+                    likeCount--;
                 }
             }
 
             // 4. 해당 Key에 대해 RDB에 반영하는 과정을 마쳤으므로,
             likeRedisRepository.delete(key);
+            Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("존재하지 않는 포스트입니다. postId: " + postId));
+            post.setLikeCount(post.getLikeCount() + likeCount);
+            postRepository.save(post);
         }
     }
 }
