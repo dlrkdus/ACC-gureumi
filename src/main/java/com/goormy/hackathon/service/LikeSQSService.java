@@ -20,7 +20,7 @@ public class LikeSQSService {
     @Autowired
     private SqsClient sqsClient;
 
-    @Value("${spring.cloud.aws.sqs.queue-url}")
+    @Value("${spring.cloud.aws.sqs.queue-url-like}")
     private String queueUrl;
 
     public void sendLikeRequest(Long userId, Long postId) {

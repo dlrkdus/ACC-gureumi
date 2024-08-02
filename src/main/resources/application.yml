@@ -28,7 +28,8 @@ spring:
         access-key: ${{ secrets.AWS_ACCESS_KEY_ID }}
         secret-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       sqs:
-        queue-url: https://sqs.ap-northeast-2.amazonaws.com/008971650206/GoormySQSForLike
+        queue-url-like: https://sqs.ap-northeast-2.amazonaws.com/008971650206/GoormySQSForLike
+        queue-url-follow: https://sqs.ap-northeast-2.amazonaws.com/008971650206/GoormySQS
 logging:
   level:
     org:
