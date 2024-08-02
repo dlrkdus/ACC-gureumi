@@ -7,7 +7,7 @@ spring:
     url: ${{ secrets.MYSQL_URL }}
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: ${{ secrets.MYSQL_USERNAME }}
-    password: ${{ secrets.MYSQL_PASSWORD}
+    password: ${{ secrets.MYSQL_PASSWORD }}
   jpa:
     hibernate:
       ddl-auto: update
