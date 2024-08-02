@@ -1,13 +1,13 @@
 spring:
   data:
     redis:
-      host: ${{ secrets.REDIS_HOST }}
-      port: ${{ secrets.REDIS_PORT }}
+      host: acc-redis.u0ldnj.clustercfg.apn2.cache.amazonaws.com
+      port: 6379
   datasource:
-    url: ${{ secrets.MYSQL_URL }}
+    url: jdbc:mysql://acc-rds-with-vpc.cfgaqgkoy31u.ap-northeast-2.rds.amazonaws.com:3306/dev
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: ${{ secrets.MYSQL_USERNAME }}
-    password: ${{ secrets.MYSQL_PASSWORD }}
+    username: admin
+    password: rnfmalelql3
   jpa:
     hibernate:
       ddl-auto: update
@@ -23,17 +23,17 @@ spring:
   cloud:
     aws:
       region:
-        static: ${{ secrets.AWS_REGION }}
+        static: ap-northeast-2
       credentials:
-        access-key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        secret-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        access-key: ${ACCESS_KEY}
+        secret-key: ${SECRET_KEY}
       sqs:
-        queue-url-like: ${{ secrets.AWS_SQS_QUEUE_URL_LIKE }}
-        queue-url-follow: ${{ secrets.AWS_SQS_QUEUE_URL_FOLLOW }}
+        queue-url-like: https://sqs.ap-northeast-2.amazonaws.com/008971650206/GoormySQSForLike
+        queue-url-follow: https://sqs.ap-northeast-2.amazonaws.com/008971650206/GoormySQS
       s3:
-        bucket: ${{ secrets.AWS_S3_BUCKET }}
+        bucket: gureumi-photo3
       cloudfront:
-        distribution-domain: ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_DOMAIN }}
+        distribution-domain: https://d3ao8a9d2v137r.cloudfront.net
 
 logging:
   level:
