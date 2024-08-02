@@ -7,21 +7,21 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class PostSimpleInfo_DS {
+public class PostSimpleInfo {
 
     private Long id;
     private String createdAt;
 
     @JsonCreator
-    public PostSimpleInfo_DS(
+    public PostSimpleInfo(
         @JsonProperty("id") Long postId,
         @JsonProperty("createdAt") String createdAt) {
         this.id = postId;
         this.createdAt = createdAt;
     }
 
-    public static PostSimpleInfo_DS toEntity(Long postId, String createdAt) {
-        return PostSimpleInfo_DS.builder()
+    public static PostSimpleInfo toEntity(Long postId, String createdAt) {
+        return PostSimpleInfo.builder()
             .id(postId)
             .createdAt(createdAt)
             .build();

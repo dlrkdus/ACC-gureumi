@@ -11,15 +11,15 @@ import org.springframework.data.redis.core.RedisHash;
 @RedisHash("recent_update")
 @Getter
 @Builder
-public class RecentUpdateRedis_DS {
+public class RecentUpdateRedis {
 
     @Id
     private Long id;
     private LocalDateTime recentUpdateTime;
 
 
-    public static RecentUpdateRedis_DS toEntity(Long id, LocalDateTime recentUpdateTime) {
-        return RecentUpdateRedis_DS.builder()
+    public static RecentUpdateRedis toEntity(Long id, LocalDateTime recentUpdateTime) {
+        return RecentUpdateRedis.builder()
             .id(id)
             .recentUpdateTime(recentUpdateTime)
             .build();

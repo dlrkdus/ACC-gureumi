@@ -3,7 +3,7 @@ package com.goormy.hackathon.controller;
 import com.goormy.hackathon.common.util.LocalDateTimeConverter_DS;
 import com.goormy.hackathon.dto.request.AddFeedUser;
 import com.goormy.hackathon.dto.response.GetFeedResponseDto;
-import com.goormy.hackathon.redis.entity.PostSimpleInfo_DS;
+import com.goormy.hackathon.redis.entity.PostSimpleInfo;
 import com.goormy.hackathon.repository.Redis.FeedHashtagRedisRepository;
 import com.goormy.hackathon.repository.Redis.FeedUserRedisRepository;
 import com.goormy.hackathon.service.GetFeedService;
@@ -53,7 +53,7 @@ public class GetFeedController {
         requestDto.getInfoList().forEach(
             info ->
                 feedHashtagRedisRepository.add(userId,
-                    PostSimpleInfo_DS.toEntity(info.getPostId(),
+                    PostSimpleInfo.toEntity(info.getPostId(),
                         localDateTimeConverter.convertToString(info.getCreatedAt())))
         );
 
@@ -69,7 +69,7 @@ public class GetFeedController {
         requestDto.getInfoList().forEach(
             info ->
                 feedUserRedisRepository.add(userId,
-                    PostSimpleInfo_DS.toEntity(info.getPostId(),
+                    PostSimpleInfo.toEntity(info.getPostId(),
                         localDateTimeConverter.convertToString(info.getCreatedAt())))
         );
 

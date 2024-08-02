@@ -2,7 +2,7 @@ package com.goormy.hackathon.service;
 
 import com.goormy.hackathon.dto.hashtag.PostHashtagRequestDto_SY;
 import com.goormy.hackathon.entity.Hashtag;
-import com.goormy.hackathon.redis.entity.FollowCountCache_SY;
+import com.goormy.hackathon.redis.entity.FollowCountCache;
 import com.goormy.hackathon.repository.Redis.FollowCountRedisRepository;
 import com.goormy.hackathon.repository.JPA.HashtagRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class HashtagService {
                         var newHashtag = new Hashtag(hashtagRequestDto.name(), hashtagRequestDto.type());
                         hashtagRepository.save(newHashtag);
 
-                        var followCountCache = new FollowCountCache_SY(newHashtag);
+                        var followCountCache = new FollowCountCache(newHashtag);
                         followCountRedisRepositorySY.set(followCountCache);
 
                         return newHashtag;

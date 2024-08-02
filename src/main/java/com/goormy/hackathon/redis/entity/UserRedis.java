@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class UserRedis_DS implements Serializable {
+public class UserRedis implements Serializable {
 
     private Long id;
 
@@ -26,7 +26,7 @@ public class UserRedis_DS implements Serializable {
     private List<Long> followerIdList;
 
     @JsonCreator
-    public UserRedis_DS(
+    public UserRedis(
         @JsonProperty("id") Long id,
         @JsonProperty("name") String name,
         @JsonProperty("password") String password,
@@ -42,9 +42,9 @@ public class UserRedis_DS implements Serializable {
     }
 
 
-    public static UserRedis_DS toEntity(Long id, String name, String password, Integer followerCount,
-        Integer followingCount, List<Long> followerIdList) {
-        return UserRedis_DS.builder()
+    public static UserRedis toEntity(Long id, String name, String password, Integer followerCount,
+                                     Integer followingCount, List<Long> followerIdList) {
+        return UserRedis.builder()
             .id(id)
             .name(name)
             .password(password)

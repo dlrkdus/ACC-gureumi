@@ -1,8 +1,8 @@
 package com.goormy.hackathon.redis.config;
 
 import com.goormy.hackathon.redis.entity.PostRedis_DS;
-import com.goormy.hackathon.redis.entity.PostSimpleInfo_DS;
-import com.goormy.hackathon.redis.entity.UserRedis_DS;
+import com.goormy.hackathon.redis.entity.PostSimpleInfo;
+import com.goormy.hackathon.redis.entity.UserRedis;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -47,12 +47,12 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<String, UserRedis_DS> userRedisTemplate() {
-        RedisTemplate<String, UserRedis_DS> redisTemplate = new RedisTemplate<>();
+    public RedisTemplate<String, UserRedis> userRedisTemplate() {
+        RedisTemplate<String, UserRedis> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory());
         redisTemplate.setKeySerializer(new StringRedisSerializer());
-        Jackson2JsonRedisSerializer<UserRedis_DS> serializer = new Jackson2JsonRedisSerializer<>(
-            UserRedis_DS.class);
+        Jackson2JsonRedisSerializer<UserRedis> serializer = new Jackson2JsonRedisSerializer<>(
+            UserRedis.class);
         redisTemplate.setValueSerializer(serializer);
         redisTemplate.setHashKeySerializer(new StringRedisSerializer());
         redisTemplate.setHashValueSerializer(serializer);
@@ -60,12 +60,12 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<String, PostSimpleInfo_DS> postSimpleInfoRedisTemplate() {
-        RedisTemplate<String, PostSimpleInfo_DS> redisTemplate = new RedisTemplate<>();
+    public RedisTemplate<String, PostSimpleInfo> postSimpleInfoRedisTemplate() {
+        RedisTemplate<String, PostSimpleInfo> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory());
         redisTemplate.setKeySerializer(new StringRedisSerializer());
-        Jackson2JsonRedisSerializer<PostSimpleInfo_DS> serializer = new Jackson2JsonRedisSerializer<>(
-            PostSimpleInfo_DS.class);
+        Jackson2JsonRedisSerializer<PostSimpleInfo> serializer = new Jackson2JsonRedisSerializer<>(
+            PostSimpleInfo.class);
         redisTemplate.setValueSerializer(serializer);
         redisTemplate.setHashKeySerializer(new StringRedisSerializer());
         redisTemplate.setHashValueSerializer(serializer);

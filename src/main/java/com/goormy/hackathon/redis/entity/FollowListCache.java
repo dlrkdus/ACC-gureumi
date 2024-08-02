@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Getter
-public class FollowListCache_SY implements Serializable {
+public class FollowListCache implements Serializable {
 
     @Id
     private String hashtagId;
