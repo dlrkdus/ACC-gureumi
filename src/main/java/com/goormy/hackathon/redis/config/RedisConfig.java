@@ -103,4 +103,16 @@ public class RedisConfig {
         return redisTemplate;
     }
 
+    // Integer 형식으로 저장 (FollowCount에서 사용)
+    @Bean
+    public RedisTemplate<String, Integer> integerRedisTemplate() {
+        RedisTemplate<String, Integer> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(redisConnectionFactory());
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(Integer.class));
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashValueSerializer(new Jackson2JsonRedisSerializer<>(Integer.class));
+        return redisTemplate;
+    }
+
 }
