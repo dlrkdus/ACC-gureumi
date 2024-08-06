@@ -32,14 +32,14 @@ public class ScheduledFunction implements Consumer<Object>{
     private final LikeRedisRepository likeRedisRepository;
     private final LikeRepository likeRepository;
     private final UserRepository userRepository;
-    private final FollowListRedisRepository followRedisRepository;
+    private final FollowListRedisRepository followListRedisRepository;
     private final FollowRepository followRepository;
     private final PostRepository postRepository;
 
     @Override
     public void accept(Object o) {
         dumpToDB();
-        migrateData();
+        migrateDB();
     }
 
     /**
@@ -81,19 +81,13 @@ public class ScheduledFunction implements Consumer<Object>{
         }
     }
 
-    /**
-     * @description Redis에 있는 '팔로우' 정보들을 RDB에 반영하는 함수
-     * */
-    // Redis 데이터를 RDBMS에 저장하고 Redis 비우기
-    public void migrateData() {
-        // Redis에서 모든 팔로우 데이터 가져오기
-        List<Follow> follows = followRedisRepository.getAllFollows();
-
-        // RDBMS에 배치 저장
+    @Transactional
+    public void migrateDB() {
+        List<Follow> follows = followListRedisRepository.getAllFollows();
         followRepository.deleteAll();
         followRepository.saveAll(follows);
-
-        // Redis 비우기
         log.info("Redis 데이터를 RDBMS로 옮기고 Redis를 초기화했습니다.");
     }
+
+
 }

@@ -1,27 +1,43 @@
 package com.goormy.hackathon.repository.Redis;
 
 import com.goormy.hackathon.entity.Follow;
+import com.goormy.hackathon.entity.Hashtag;
+import com.goormy.hackathon.entity.User;
 import com.goormy.hackathon.repository.JPA.FollowRepository;
+import com.goormy.hackathon.repository.JPA.HashtagRepository;
+import com.goormy.hackathon.repository.JPA.UserRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Repository
+@Slf4j
+@RequiredArgsConstructor
 public class FollowListRedisRepository {
 
-    @Autowired
-    RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
-    @Autowired
-    FollowRepository followRepository;
+    private ListOperations <String, Long> listOperations;
+
+    private final FollowRepository followRepository;
+
+    private final HashtagRepository hashtagRepository;
+
+    private final UserRepository userRepository;
 
     public void set(Long hashtagId, Long userId) {
-        String key = "hashtagId: " + hashtagId.toString();
-        redisTemplate.opsForList().rightPush(key, userId);
+        String key = "hashtagId:" + hashtagId.toString();
+        String userid = userId.toString();
+        redisTemplate.opsForList().rightPush(key, userid);
     }
 
     public void delete(Long hashtagId, Long userId) {
@@ -30,26 +46,25 @@ public class FollowListRedisRepository {
     }
 
     public List<Follow> getAllFollows() {
-        // Redis에서 데이터를 가져와 RDBMS로 마이그레이션
-        List<Follow> follows = new ArrayList<>();
-
-        // 모든 키 가져오기
         Set<String> keys = redisTemplate.keys("hashtagId:*");
-
+        List<Follow> follows = new ArrayList<>();
         if (keys != null) {
             for (String key : keys) {
-                List<Long> userIds = (List<Long>) (List<?>) redisTemplate.opsForList().range(key, 0, -1);
+
+                List<Object> userIds = redisTemplate.opsForList().range(key, 0, -1);
                 if (userIds != null) {
-                    for (Long userId : userIds) {
+                    for (Object userId : userIds) {
                         Long hashtagId = Long.parseLong(key.split(":")[1]);
-                        Follow follow = followRepository.findByUserIdAndHashTagId(userId,hashtagId)
-                                .orElseThrow(() -> new RuntimeException("존재하지 않는 팔로우입니다. userId: " + userId + " hashtagId: " + hashtagId));
+                        User user = userRepository.findById((Long)userId)
+                                .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
+                        Hashtag hashtag = hashtagRepository.findById(hashtagId)
+                                .orElseThrow(() -> new IllegalArgumentException("해당 해시태그 찾을 수 없습니다. "));
+                        Follow follow = new Follow(user, hashtag);
                         follows.add(follow);
                     }
                 }
             }
         }
-
         return follows;
     }
 
