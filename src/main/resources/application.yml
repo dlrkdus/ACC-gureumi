@@ -1,0 +1,39 @@
+spring:
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  datasource:
+    url: ${MYSQL_URL:jdbc:mysql://gureumi-rds.cfgaqgkoy31u.ap-northeast-2.rds.amazonaws.com}:${MYSQL_PORT:3306}/${MYSQL_SCHEMA:gureumi-rds}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${MYSQL_USERNAME:admin}
+    password: ${MYSQL_PASSWORD:rnfmalelql3}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+  profiles:
+    include:
+      - redis
+      - swagger
+  cloud:
+    aws:
+      region:
+        static: ${{ secrets.AWS_REGION }}
+      credentials:
+        access-key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        secret-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      sqs:
+        queue-url-like: https://sqs.ap-northeast-2.amazonaws.com/008971650206/GoormySQSForLike
+        queue-url-follow: https://sqs.ap-northeast-2.amazonaws.com/008971650206/GoormySQS
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace

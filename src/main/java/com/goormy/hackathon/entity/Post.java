@@ -2,12 +2,15 @@ package com.goormy.hackathon.entity;
 
 import com.goormy.hackathon.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @NoArgsConstructor
@@ -36,6 +39,7 @@ public class Post extends BaseTimeEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Like> likes = new ArrayList<>();
 
+
     @Builder
     public Post(User user, String content, String imageUrl, Integer star, Integer likeCount) {
         this.user = user;
@@ -44,4 +48,17 @@ public class Post extends BaseTimeEntity {
         this.star = star;
         this.likeCount = likeCount;
     }
+
+    public List<Hashtag> getPostHashtags() {
+        return postHashtags.stream()
+                .map(PostHashtag::getHashtag)
+                .toList();
+    }
+
+    public void setPostHashtags(List<Hashtag> hashtags) {
+        this.postHashtags = hashtags.stream()
+                .map(hashtag -> new PostHashtag(this, hashtag))
+                .toList();
+    }
+
 }
