@@ -81,18 +81,18 @@ public class ScheduledFunction implements Consumer<Object>{
         }
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void migrateDB() {
         log.info("데이터 이전을 시작합니다.");
         try {
             List<Follow> follows = followListRedisRepository.getAllFollows();
             followRepository.deleteAll();
             followRepository.saveAll(follows);
+            log.info("Redis 데이터를 RDBMS로 옮기고 Redis를 초기화했습니다.");
         }
         catch (Exception e) {
             log.error("데이터 이전에 실패했습니다.",e);
         }
-        log.info("Redis 데이터를 RDBMS로 옮기고 Redis를 초기화했습니다.");
     }
 
 

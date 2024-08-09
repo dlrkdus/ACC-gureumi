@@ -3,21 +3,16 @@ package com.goormy.hackathon.repository.Redis;
 import com.goormy.hackathon.entity.Follow;
 import com.goormy.hackathon.entity.Hashtag;
 import com.goormy.hackathon.entity.User;
-import com.goormy.hackathon.repository.JPA.FollowRepository;
 import com.goormy.hackathon.repository.JPA.HashtagRepository;
 import com.goormy.hackathon.repository.JPA.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Repository
 @Slf4j
@@ -26,18 +21,13 @@ public class FollowListRedisRepository {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
-    private ListOperations <String, Long> listOperations;
-
-    private final FollowRepository followRepository;
-
     private final HashtagRepository hashtagRepository;
 
     private final UserRepository userRepository;
 
     public void set(Long hashtagId, Long userId) {
         String key = "hashtagId:" + hashtagId.toString();
-        String userid = userId.toString();
-        redisTemplate.opsForList().rightPush(key, userid);
+        redisTemplate.opsForList().rightPush(key, userId);
     }
 
     public void delete(Long hashtagId, Long userId) {
@@ -55,7 +45,9 @@ public class FollowListRedisRepository {
                 if (userIds != null) {
                     for (Object userId : userIds) {
                         Long hashtagId = Long.parseLong(key.split(":")[1]);
-                        User user = userRepository.findById((Long)userId)
+                        Long userIdLong = Long.parseLong(String.valueOf(userId));
+
+                        User user = userRepository.findById(userIdLong)
                                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
                         Hashtag hashtag = hashtagRepository.findById(hashtagId)
                                 .orElseThrow(() -> new IllegalArgumentException("해당 해시태그 찾을 수 없습니다. "));
